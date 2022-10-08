@@ -38,5 +38,13 @@ def displayClick(clicks):
         # while True:
     # html.Div(clicks)
 
+import dash_daq as daq
+daq.Thermometer(
+    value=5,
+    label='Current temperature',
+    labelPosition='top'
+)    
+
 if __name__ == '__main__':
     app.run_server(debug=True)
+    
