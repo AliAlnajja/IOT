@@ -1,13 +1,15 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
-from dash import Dash, html, Input, Output, ctx
+from dash import Dash, html, Input, Output, dcc, ctx
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
+import Freenove_DHT as DHT
 from time import sleep # Import the sleep function from the time module
+import dash_daq as daq
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 LED=17 
+DHTPin=17
 GPIO.setup(LED, GPIO.OUT, initial=GPIO.LOW)
+dht = DHT.DHT(DHTPin) #create a DHT class object    
+chk = dht.readDHT11()
 
 app = Dash(__name__)
 
@@ -15,13 +17,31 @@ app.layout = html.Div([
     html.Button(id='btn-nclicks-1', n_clicks=0),
     # html.Button('Button 2', id='btn-nclicks-2', n_clicks=0),
     # html.Div(id='container-button-timestamp')
+    html.Div([
+    daq.Gauge(
+        # id='my-gauge-1',
+        label="Default",
+        value=dht.temperature
+    ),
+    ]),
 ])
 
 @app.callback(
     Output('btn-nclicks-1', 'children'),
     Input('btn-nclicks-1', 'n_clicks'),
+    # Output('my-thermometer-1', 'value'),
+    # Input('thermometer-slider-1', 'value'),
     # Input('btn-nclicks-2', 'n_clicks'),
 )
+
+# @app.callback(Output('my-gauge-1', 'value'))
+
+# @app.callback(
+#     Output('my-thermometer-1', 'value'),
+#     Input('thermometer-slider-1', 'value'),
+#     # Input('btn-nclicks-2', 'n_clicks'),
+# )
+
 def displayClick(clicks):
     # msg = "None of the buttons have been clicked yet"
     if (clicks % 2 == 0): 
@@ -38,13 +58,16 @@ def displayClick(clicks):
         # while True:
     # html.Div(clicks)
 
-import dash_daq as daq
-daq.Thermometer(
-    value=5,
-    label='Current temperature',
-    labelPosition='top'
-)    
+def update_output(value):
+    return value
+
+
+# def update_thermometer(value):
+    
+#         return value,
+    # return value
+
+     
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    
