@@ -22,6 +22,13 @@ DHTPin=17
 GPIO.setup(LED, GPIO.OUT, initial=GPIO.LOW)
 dht = DHT.DHT(DHTPin) #create a DHT class object    
 
+# Motor1 = 27
+# Motor2 = 18
+# Motor3 = 22
+# GPIO.setup(Motor1, GPIO.OUT)
+# GPIO.setup(Motor2, GPIO.OUT)
+# GPIO.setup(Motor3, GPIO.OUT)
+
 dht.readDHT11()
 
 def main():
@@ -72,6 +79,22 @@ def main():
             SENT = True
         return value
 
+
+    # # Method to turn fan on or off based on user input with image output
+    # def control_motor(response): #need to parse email response for yes or no
+    #     if response.lower() == "yes":
+    #         GPIO.output(Motor1, GPIO.HIGH)
+    #         GPIO.output(Motor2, GPIO.LOW)
+    #         GPIO.output(Motor3, GPIO.HIGH)
+    #         return html.Img(src = app.get_asset_url('motor_on.jpg'), width=200, height=200)
+    #     else:
+    #         GPIO.output(Motor1, GPIO.LOW)
+    #         GPIO.output(Motor2, GPIO.LOW)
+    #         GPIO.output(Motor3, GPIO.LOW)
+    #         return html.Img(src = app.get_asset_url('motor_off.jpg'), width=200, height=200)
+
+
+    
     '''
     @app.callback(
         Output('btn-nclicks-1', 'children'),
