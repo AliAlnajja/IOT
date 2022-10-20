@@ -46,6 +46,17 @@ def main():
                 n_intervals=0
         ),
         ]),
+        html.Div([
+            daq.Gauge(
+            id='temp-gauge',
+            showCurrentValue=True,
+            units="Degrees Celsius",
+            label="Default",
+            value=dht.humidity,
+            max=30,
+            min=0,
+        ),
+        ]),
     ])
 
 
