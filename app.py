@@ -82,7 +82,7 @@ def main():
 
     # # Method to turn fan on or off based on user input with image output
     # def control_motor(response): #need to parse email response for yes or no
-    #     if response.lower() == "yes":
+    #     if receive_email() == "yes":
     #         GPIO.output(Motor1, GPIO.HIGH)
     #         GPIO.output(Motor2, GPIO.LOW)
     #         GPIO.output(Motor3, GPIO.HIGH)
@@ -162,6 +162,10 @@ def receive_email():
         print(email.title)
         print(email.from_addr)
         print(email.body)
+        # response = email.title
+        # response += email.body
+        # response = response.lower()
+        # return response
     else:
         server.quit()
 
