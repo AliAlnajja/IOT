@@ -42,33 +42,42 @@ def main():
             id='temp-gauge',
             showCurrentValue=True,
             units="Degrees Celsius",
-            label="Default",
+            label="Temperature",
             value=dht.temperature,
             max=30,
             min=0,
         ),
         dcc.Interval(
                 id='interval-component',
-                interval=10*1000, # in milliseconds
+                interval=5*1000, # in milliseconds
                 n_intervals=0
         ),
         ]),
         html.Div([
             daq.Gauge(
-            id='temp-gauge',
+            id='humidity-gauge',
             showCurrentValue=True,
             units="Degrees Celsius",
-            label="Default",
+            label="Humidity",
             value=dht.humidity,
-            max=30,
+            max=100,
             min=0,
+        ),
+        dcc.Interval(
+                id='interval-components',
+                interval=5*1000, # in milliseconds
+                n_intervals=0
         ),
         ]),
     ])
 
 
     @app.callback(Output('temp-gauge', 'value'),
-                Input('interval-component', 'n_intervals')
+                Input('interval-component', 'n_intervals'),
+    )
+
+    @app.callback(Output('humidity-gauge', 'value'),
+                Input('interval-components', 'n_intervals'),
     )
     def updateTemp(value):
         global SENT
