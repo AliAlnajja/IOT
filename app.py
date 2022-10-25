@@ -69,6 +69,18 @@ def main():
                 n_intervals=0
         ),
         ]),
+        # html.Div([
+        # dict(
+        #     id="fan-img"
+        #     source=fan_image,
+        #     width=200,
+        #     height=200,)
+        # ),
+        # dcc.Interval(
+        #         id='interval-components',
+        #         interval=5*1000, # in milliseconds
+        #         n_intervals=0
+        # ),
     ])
 
 
@@ -88,19 +100,24 @@ def main():
             SENT = True
         return value
 
+    # @app.callbacl(Output('fan-img', 'source'),
+    #             Input('interval-compomemts', 'n_intervals'),
+    # )
 
-    # # Method to turn fan on or off based on user input with image output
+    # Method to turn fan on or off based on user input with image output
     # def control_motor(response): #need to parse email response for yes or no
     #     if receive_email() == "yes":
     #         GPIO.output(Motor1, GPIO.HIGH)
     #         GPIO.output(Motor2, GPIO.LOW)
     #         GPIO.output(Motor3, GPIO.HIGH)
-    #         return html.Img(src = app.get_asset_url('motor_on.jpg'), width=200, height=200)
+    #         fan_image = html.Img(src = app.get_asset_url('motor_on.jpg'), width=200, height=200)
+    #         return fan_image
     #     else:
     #         GPIO.output(Motor1, GPIO.LOW)
     #         GPIO.output(Motor2, GPIO.LOW)
     #         GPIO.output(Motor3, GPIO.LOW)
-    #         return html.Img(src = app.get_asset_url('motor_off.jpg'), width=200, height=200)
+    #         fan_image = html.Img(src = app.get_asset_url('motor_off.jpg'), width=200, height=200)
+    #         return fan_image
 
 
     
