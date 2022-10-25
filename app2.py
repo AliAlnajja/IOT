@@ -20,13 +20,13 @@ GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 LED=17 
 DHTPin=12
-enablePin = 27
-leftPin = 18
-rightPin = 22
+enablePin = 13
+leftPin = 19
+rightPin = 26
 GPIO.setup(LED, GPIO.OUT, initial=GPIO.LOW)
-# GPIO.setup(enablePin, GPIO.OUT)
-# GPIO.setup(leftPin, GPIO.OUT)
-# GPIO.setup(rightPin, GPIO.OUT)
+GPIO.setup(enablePin, GPIO.OUT)
+GPIO.setup(leftPin, GPIO.OUT)
+GPIO.setup(rightPin, GPIO.OUT)
 dht = DHT.DHT(DHTPin) #create a DHT class object    
 
 
@@ -37,7 +37,7 @@ def main():
     app.layout = html.Div([
 
         html.Div([
-            html.Button(id='btn-nclicks-1', n_clicks=0),
+            html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0),
         ]),
 
         html.Div([
@@ -70,7 +70,7 @@ def main():
             html.Button(id='btn-nclicks-2', n_clicks=0),
             dcc.Interval(
                 id='recieve-email_component',
-                interval=5 * 1000,  # in milliseconds
+                interval= 2 * 1000,  # in milliseconds
                 n_intervals=0
             ),
         ]),
@@ -108,8 +108,7 @@ def main():
     )
     def updateHumidity(value):
         sleep(0.5)
-        dht.readDHT11()
-        value = dht.temperature
+        value = dht.humidity
         return value
 
     @app.callback(Output('btn-nclicks-2', 'children'),
@@ -128,12 +127,15 @@ def main():
             sleep(1)
             return html.Img(src=app.get_asset_url('motor_off.jpg'), width=200, height=200),
 
-    @app.callback(Input('temp-humidity-intervals', 'n_intervals'),
-    )
-    def emailToFan(value):
-        response = receive_email()
-        if response:
-            displayMotorClick(2)
+    # @app.callback(Output('btn-nclicks-2', 'status'),
+    #     Input('temp-humidity-intervals', 'n_intervals'),
+    # )
+    # def emailToFan(value):
+    #     response = receive_email()
+    #     if response:
+    #         displayMotorClick(2)
+    #         return 'on'
+    #     return 'off'
     
     '''
     @app.callback(
