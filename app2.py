@@ -115,6 +115,8 @@ def main():
             SENT = True
         elif receive_email() and not REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
+            sleep(5)
+            displayMotorClick(1)
         elif value < 22 and FAN_ON: # If temp is below 22 degrees Celsius, turn off fan
             SENT = False
             displayMotorClick(1)
@@ -138,8 +140,7 @@ def main():
         if (clicks % 2 == 0):
             GPIO.output(enablePin, GPIO.HIGH)
             FAN_ON = True
-            sleep(5)
-            GPIO.output(enablePin, GPIO.LOW)
+            sleep(1)
             return html.Img(src=app.get_asset_url('motor_on.jpg'), width=200, height=200),
         else:
             GPIO.output(enablePin, GPIO.LOW)
