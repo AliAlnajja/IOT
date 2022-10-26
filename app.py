@@ -16,7 +16,7 @@ PASSWORD = 'bvlg sbug wars xozh'
 RECEIVER_ADDRESS = 'tonynadeau03@gmail.com'
 SENT = False
 FAN_ON = False
-REFUSED = True
+NOT_REFUSED = True
 
 # Pi Phase 2 Setup
 GPIO.setwarnings(False) # Ignore warning for now
@@ -113,7 +113,7 @@ def main():
         if value > 23 and not SENT: # If temp exceeds 24 degrees Celsius, send email
             send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT = True
-        elif receive_email() and not REFUSED: # If email is received, with a response of yes, turn on fan
+        elif receive_email() and not NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)
@@ -189,7 +189,7 @@ def delete_email():
 
 # Method to receive email
 def receive_email():
-    global REFUSED
+    global NOT_REFUSED
     server = imap.connect('imap.gmail.com', EMAIL_ADDRESS, PASSWORD)
 
     for mail in server.listids():
@@ -199,7 +199,7 @@ def receive_email():
             delete_email()
             return True
         elif "no" in response:
-            REFUSED = False
+            NOT_REFUSED = False
     else:
         server.quit()
         delete_email()
