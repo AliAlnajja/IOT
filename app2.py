@@ -11,11 +11,12 @@ import imaplib
 import easyimap as imap
 
 # GLOBAL VARIABLES
-EMAIL_ADDRESS = 'noreply.piservice@gmail.com'
+EMAIL_ADDRESS = 'noreply.piservice@gmail.com' #piservice! or Piservice!
 PASSWORD = 'bvlg sbug wars xozh'
 RECEIVER_ADDRESS = 'tonynadeau03@gmail.com'
 SENT = False
 FAN_ON = False
+REFUSED = True
 
 # Pi Phase 2 Setup
 GPIO.setwarnings(False) # Ignore warning for now
@@ -109,10 +110,10 @@ def main():
         global SENT
         dht.readDHT11()
         value = dht.temperature
-        if value > 24 and not SENT: # If temp exceeds 24 degrees Celsius, send email
+        if value > 23 and not SENT: # If temp exceeds 24 degrees Celsius, send email
             send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT = True
-        elif receive_email(): # If email is received, with a response of yes, turn on fan
+        elif receive_email() and not REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
         elif value < 22 and FAN_ON: # If temp is below 22 degrees Celsius, turn off fan
             SENT = False
@@ -137,7 +138,8 @@ def main():
         if (clicks % 2 == 0):
             GPIO.output(enablePin, GPIO.HIGH)
             FAN_ON = True
-            sleep(1)
+            sleep(5)
+            GPIO.output(enablePin, GPIO.LOW)
             return html.Img(src=app.get_asset_url('motor_on.jpg'), width=200, height=200),
         else:
             GPIO.output(enablePin, GPIO.LOW)
@@ -186,6 +188,7 @@ def delete_email():
 
 # Method to receive email
 def receive_email():
+    global REFUSED
     server = imap.connect('imap.gmail.com', EMAIL_ADDRESS, PASSWORD)
 
     for mail in server.listids():
@@ -194,6 +197,8 @@ def receive_email():
         if "yes" in response:
             delete_email()
             return True
+        elif "no" in response:
+            REFUSED = False
     else:
         server.quit()
         delete_email()
