@@ -1,0 +1,79 @@
+/* Dark Theme color */
+
+body {
+	--text-color: #222;
+	--bkg-color: #ffffff;
+	--header-color: #fbd9b3;
+	--link-color: #0000dd;
+	--link-hover-color: #000000;
+	--border-color: black;
+	--profile-background: cyan;
+}
+
+body.dark-theme {
+	--text-color: #eee;
+	--bkg-color:  #282a36;
+	--header-color: #ffb861;
+	--link-color: #40d0e0;
+	--link-hover-color: #ffffff;
+	--border-color: white;
+	--profile-background: black;
+}
+
+body {
+	background: var(--bkg-color);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	color: var(--text-color);
+}
+
+form {
+	color: var(--text-color);
+}
+
+table {
+	color: var(--text-color);
+}
+
+th, td {
+	color: var(--text-color);
+}
+
+a {
+	color: var(--link-color);
+}
+
+a:hover {
+	color: var(--link-hover-color);
+}
+
+div.profile {
+	border-top: 3px solid var(--border-color);
+ border-right: 3px solid var(--border-color);
+ border-bottom: 3px solid var(--border-color);
+}
+
+.profile h2 {
+	background-color: var(--profile-background);
+}
+
+div.header {
+	background: var(--header-color);
+}
+
+div.form {
+	color: var(--text-color);
+	background: var(--bkg-color);
+}
+
+.button {
+	background-color: #03bafc; 
+	border-radius: 5px;
+	font-size: 15px;
+  	color: black;
+  	padding: 6px;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+}

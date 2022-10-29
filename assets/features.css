@@ -1,0 +1,33 @@
+/* SELECTING ALL THE APPRORIATE WIDGETS */
+
+.light-bulb {
+ display: inline-block;
+	background-color: white;
+ float: right;
+ /* width: 100px;
+ height: 100px; */
+
+}
+
+.light-bulb h1 {
+ background-color: blue;
+}
+
+.temperature {
+ background-color: black;
+ float: left;
+ width: 10%;
+}
+
+.humidity {
+ background-color: black;
+ float: left;
+ width: 10%;
+
+} 
+
+.fan {
+ background-color: red;
+ float: left;
+ width: 10%;
+}
