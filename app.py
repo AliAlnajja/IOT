@@ -44,9 +44,10 @@ def main():
 
         # Light Button
         html.Div([
+            html.H1("hi"),
             html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0),
-        ]),
-
+        ], className= "light-bulb"),
+        
         # Gauges for Temperature and Humidity
         html.Div([
             daq.Gauge(
@@ -57,6 +58,7 @@ def main():
                 value=dht.temperature,
                 max=30,
                 min=0,
+                className="temperature",
             ),
             daq.Gauge(
                 id='humidity-gauge',
@@ -66,18 +68,19 @@ def main():
                 value=dht.humidity,
                 max=100,
                 min=0,
+                className="humidity",
             ),
             # Interval to update gauges live
             dcc.Interval(
                     id='temp-humidity-intervals',
-                    interval=5*1000, # in milliseconds
+                    interval=10*1000, # in milliseconds
                     n_intervals=0
             ),
         ]),
 
         # Fan Button
         html.Div([
-            html.Button(id='btn-nclicks-2', n_clicks=0),
+            html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
             dcc.Interval(
                 id='recieve-email_component',
                 interval= 2 * 1000,  # in milliseconds
@@ -85,7 +88,53 @@ def main():
             ),
         ]),
     ])
-
+    
+    app.index_string = '''
+    <!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div class="header">
+            <h1>IOT DASHBOARD</h1>
+            <span>
+                <div class="left">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </span>
+            
+        </div>
+        <div class="profile">
+            <h2>USER PROFILE</h2>
+            <img src="/assets/anonymousProfile.png" alt="Avatar">
+            <div class="info">
+            <p>Username</p>
+            </br>
+            <p>favorites</p>
+            </br>
+            <p>Temperature:</p>
+            </br>
+            <p>Humidity:</p>
+            </br>
+            <p>Light intensity:</p>
+            </div>
+        </div> 
+        {%app_entry%}
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+    </body>
+</html>
+    '''
+    
     ## CALLBACKS ##
 
     # Callback for turnung the light on and off (Phase 1)
