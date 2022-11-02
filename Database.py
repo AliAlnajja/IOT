@@ -1,27 +1,73 @@
-import firebase_admin  # pip install firebase_admin
-from firebase_admin import db
-import json
+import pyrebase #pip3 install Pyrebase4
 
-# Useful link for the future
-# https://www.freecodecamp.org/news/how-to-get-started-with-firebase-using-python/
 
-# Database connection
-cred_obj = firebase_admin.credentials.Certificate('\piservice-firebase-adminsdk-6t0hc-e2400044da.json')
-default_app = firebase_admin.initialize_app(cred_obj, {'databaseURL': 'https://piservice-default-rtdb.firebaseio.com/'})
+config = {
+	"apiKey": "AIzaSyAygkmVV4K-kmyLKnTW4oy9DCUcuAQZ_aw",
+	"authDomain": "piservice.firebaseapp.com",
+	"databaseURL": "https://piservice-default-rtdb.firebaseio.com/",
+	"projectId": "piservice",
+	"storageBucket": "piservice.appspot.com",
+	"messagingSenderId": "91557331901",
+	"appId": "1:91557331901:web:f458ffc2cca448cb8a08d4",
+	"measurementId": "G-VQW24SCDYV"
+}
 
-# Sector of Realtime DB
-ref = db.reference("/")
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
-# Method to create data in the database (will be improved)
-def createUser():
-	db.set(json_data)
+def formatUserJson(name, max_temp, max_humid, max_light):
+	data = {
+		"Name" : name,
+		"Temp_Threshold" : max_temp,
+		"Humid_Threshold" : max_humid,
+		"Light_Threshold" : max_light
+	}
+	return data
 
-def read(querystring):
 
-def update(key, column, value):
-	users = ref.get()
-	for k, v, in users.items():
-		if (v["user_id"] == key):
-			ref.child(k).update({column = value})
+def userIsNull(rfid_key):
+	return db.child(rfid_key).get().val() == None
 
-def delete(key):
+
+def createUser(rfid_key, name, max_temp, max_humid, max_light):	
+	if userIsNull(rfid_key):
+		db.child(rfid_key).set(formatUserJson(name, max_temp, max_humid, max_light))
+	else:
+		updateUser(rfid_key, formatUserJson(name, max_temp, max_humid, max_light))
+
+
+def getUserInfo(rfid_key):
+	if userIsNull(rfid_key) is False:
+		return db.child(rfid_key).get().val()
+	else:
+		print("Invalid user. Please enter a valid user RFID key.")
+
+
+def updateUser(rfid_key, user_data):
+	if userIsNull(rfid_key) is False:
+		db.child(rfid_key).update(user_data)
+	else:
+		print("Invalid user. Please enter a valid user RFID key.")
+
+
+def updateUserInfo(rfid_key, column, value):
+	if userIsNull(rfid_key) is False:
+		db.child(rfid_key).update({column : value})
+	else:
+		print("Invalid user. Please enter a valid user RFID key.")
+
+
+def deleteUser(rfid_key):
+	if userIsNull(rfid_key) is False:
+		db.child(rfid_key).remove()
+	else:
+		print("Invalid user. No user was deleted.")
+
+
+def parseUserData(userData):
+	print(userData["Name"])
+	print(userData["Temp_Threshold"])
+	print(userData["Humid_Threshold"])
+	print(userData["Light_Threshold"])
+
+parseUserData(getUserInfo(1))

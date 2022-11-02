@@ -1,6 +1,7 @@
 # Imports
 from dash import Dash, html, Input, Output, dcc, ctx
 import dash_daq as daq
+import Database
 
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import Freenove_DHT as DHT
