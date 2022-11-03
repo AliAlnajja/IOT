@@ -2,22 +2,14 @@
 from dash import Dash, html, Input, Output, dcc, ctx
 import dash_daq as daq
 import Database
+import Email
 
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import Freenove_DHT as DHT
 from time import sleep # Import the sleep function from the time module
 
-import smtplib
-import imaplib
-import easyimap as imap
-
-# GLOBAL VARIABLES
-EMAIL_ADDRESS = 'noreply.piservice@gmail.com' #piservice! or Piservice!
-PASSWORD = 'bvlg sbug wars xozh'
-RECEIVER_ADDRESS = 'tonynadeau03@gmail.com'
 SENT = False
 FAN_ON = False
-NOT_REFUSED = True
 
 # Pi Phase 2 Setup
 GPIO.setwarnings(False) # Ignore warning for now
@@ -203,57 +195,4 @@ def main():
     if __name__ == '__main__':
         app.run_server(debug=True)
 
-
-## INDEPENDENT PYTHON METHODS ##
-
-# Method to send email
-def send_email(subject, body):
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.ehlo()
-
-        smtp.login(EMAIL_ADDRESS, PASSWORD)
-        msg = f'Subject: {subject}\n\n{body}'
-        smtp.sendmail(EMAIL_ADDRESS, RECEIVER_ADDRESS, msg)
-
-
-# Method to delete email
-def delete_email():
-    mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login(EMAIL_ADDRESS, PASSWORD)
-
-    mail.select("inbox")
-    # typ, data = mail.search(None, 'SUBJECT "hello"')  # Filter by subject
-    # typ, data = mail.search(None, 'FROM "example@gmail.com"')  # Filter by sender
-    # typ, data = mail.search(None, 'SINCE "015-JUN-2020"')  # Filter by date
-    typ, data = mail.search(None, "ALL")  # Filter by all
-
-    for num in data[0].split():
-        mail.store(num, '+FLAGS', r'(\Deleted)')
-
-    mail.expunge()
-    mail.close()
-    mail.logout()
-
-
-# Method to receive email
-def receive_email():
-    global NOT_REFUSED
-    server = imap.connect('imap.gmail.com', EMAIL_ADDRESS, PASSWORD)
-
-    for mail in server.listids():
-        email = server.mail(mail)
-        response =  (email.title + " " + email.body).lower()
-        if "yes" in response:
-            delete_email()
-            return True
-        elif "no" in response:
-            NOT_REFUSED = False
-    else:
-        server.quit()
-        delete_email()
-        return False
-
-# Call to main to run the application
 main()
