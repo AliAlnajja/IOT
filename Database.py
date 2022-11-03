@@ -1,5 +1,6 @@
 import pyrebase #pip3 install Pyrebase4
-
+import shutil
+import os
 
 config = {
 	"apiKey": "AIzaSyAygkmVV4K-kmyLKnTW4oy9DCUcuAQZ_aw",
@@ -9,18 +10,21 @@ config = {
 	"storageBucket": "piservice.appspot.com",
 	"messagingSenderId": "91557331901",
 	"appId": "1:91557331901:web:f458ffc2cca448cb8a08d4",
-	"measurementId": "G-VQW24SCDYV"
+	"measurementId": "G-VQW24SCDYV",
+	"serviceAccount": "serviceAccountKey.json"
 }
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
+storage = firebase.storage()
 
 def formatUserJson(name, max_temp, max_humid, max_light):
 	data = {
 		"Name" : name,
 		"Temp_Threshold" : max_temp,
 		"Humid_Threshold" : max_humid,
-		"Light_Threshold" : max_light
+		"Light_Threshold" : max_light,
+		"Profile_Image" : "anonymousProfile.png"
 	}
 	return data
 
@@ -69,5 +73,24 @@ def parseUserData(userData):
 	print(userData["Temp_Threshold"])
 	print(userData["Humid_Threshold"])
 	print(userData["Light_Threshold"])
+	print(userData["Profile_Image"])
 
-parseUserData(getUserInfo(1))
+
+def uploadProfileImage(rfid_key):
+	storage.child(rfid_key).put("./userImages/" + rfid_key)
+	updateUserInfo(rfid_key, "Profile_Image", rfid_key)
+	shutil.rmtree("./userImages")
+	os.mkdir("./userImages")
+
+
+def downloadProfileImage(rfid_key):
+	shutil.rmtree("./userImages")
+	os.mkdir("./userImages")
+	if getUserInfo(rfid_key)["Profile_Image"] == "anonymousProfile.png":
+		storage.child("anonymousProfile.png").download("anonymousProfile.png", "profile.png")
+	else:
+		storage.child(rfid_key).download(rfid_key, "profile.png")
+	shutil.move("./profile.png", "./userImages/profile.png")
+
+downloadProfileImage(1)
+
