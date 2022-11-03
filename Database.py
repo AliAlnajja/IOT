@@ -92,5 +92,3 @@ def downloadProfileImage(rfid_key):
 		storage.child(rfid_key).download(rfid_key, "profile.png")
 	shutil.move("./profile.png", "./userImages/profile.png")
 
-downloadProfileImage(1)
-
