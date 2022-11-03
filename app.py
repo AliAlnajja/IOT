@@ -79,6 +79,15 @@ def main():
                 interval= 2 * 1000,  # in milliseconds
                 n_intervals=0
             ),
+            html.Div([
+            daq.ColorPicker(
+            id='my-color-picker-1',
+            label='Color Picker',
+            value=dict(hex='#119DFF'),
+            className="colors",
+            ),
+        html.Div(id='color-picker-output-1')
+        ], className="rgb"),
         ]),
     ])
     
@@ -189,7 +198,16 @@ def main():
             FAN_ON = False
             sleep(1)
             return html.Img(src=app.get_asset_url('motor_off.jpg'), width=200, height=200),
-
+    
+    # RGB Color
+    @app.callback(
+        Output('color-picker-output-1', 'children'),
+        Input('my-color-picker-1', 'value')
+    )
+    # RGB Color
+    def update_output(value):
+        return f'The selected color is {value}.'
+    
    
     ## RUN SERVER ##
     if __name__ == '__main__':

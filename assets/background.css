@@ -1,5 +1,12 @@
 /* Dark Theme color */
 
+html body {
+	margin: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+
 body {
 	--text-color: #222;
 	--bkg-color: #ffffff;
@@ -49,9 +56,29 @@ a:hover {
 }
 
 div.profile {
-	border-top: 3px solid var(--border-color);
  border-right: 3px solid var(--border-color);
  border-bottom: 3px solid var(--border-color);
+}
+
+div.light-bulb {
+ border-left: 3px solid var(--border-color);
+ border-bottom: 3px solid var(--border-color);
+}
+
+div.temperature {
+	/* border-left: 3px solid var(--border-color); */
+ border-bottom: 3px solid var(--border-color);
+}
+
+div.humidity {
+	/* border-right: 3px solid var(--border-color); */
+ border-bottom: 3px solid var(--border-color);
+}
+
+div.fan img {
+	border-bottom: 3px solid var(--border-color);
+	border-left: 3px solid var(--border-color);
+	border-right: 3px solid var(--border-color);
 }
 
 .profile h2 {

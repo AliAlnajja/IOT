@@ -2,11 +2,16 @@
 
 .light-bulb {
  display: inline-block;
-	background-color: white;
+	background-color: black;
  float: right;
- /* width: 100px;
- height: 100px; */
+}
 
+.light-bulb img {
+	position: relative;
+	display: inline-block;
+	width: 300px; 
+ height: 266px;
+	object-fit: contain;
 }
 
 .light-bulb h1 {
@@ -14,20 +19,66 @@
 }
 
 .temperature {
+	position: absolute;
+	display: inline-block;
  background-color: black;
  float: left;
- width: 10%;
+ width: 526px;
+	margin: 0;
+	padding: 0;
 }
 
 .humidity {
+	position: relative;
+	display: inline-block;
  background-color: black;
- float: left;
- width: 10%;
-
+ float: right;
+ width: 525px;
+	margin: 0;
+	padding: 0;
+	/* width: 100%; */
 } 
 
-.fan {
- background-color: red;
- float: left;
- width: 10%;
+.fan img {
+	padding: 0;
+	margin: 0;
+	/* position: relative;
+	display: inline-block; */
+	height: 347px;
+	width: 526px;
+	object-fit: cover;
+	float: right;
 }
+
+
+
+.rgb {
+	/* margin-right: 288px; */
+	/* padding-right: 200px; */
+	position: relative;
+	height: 347px;
+	width: 523px;
+	/* display: inline-block; */
+	/* position: relative; */
+	/* float: right; */
+	/* width: 100px;
+	height: 100px; */
+	/* background-color: black; */
+	float: left;
+}
+
+.colors {
+	width: 500px;
+	height: 347px;
+}
+
+
+
+
+/* #my-color-picker-1 {
+	float: right;
+}
+
+#color-picker-output-1 {
+	float: right;
+} */
