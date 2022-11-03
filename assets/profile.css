@@ -2,9 +2,10 @@
 .profile {
  position: relative;
  display: inline-block;
- margin-right: 20px;
+ /* margin-left: 20px; */
  float: left;
  width: 500px;
+
 }
 
 /* Profile heading being selected AKA USER PROFILE */
@@ -15,10 +16,11 @@
 }
 
 /* Image of the users profile being selected for now it affects every img */
-img {
+.profile img {
   border-radius: 50%;
   width: 40%;
   height: 40%;
+  object-fit: contain;
 }
 
 /* The div information is being selected and affecting all the required info of the user*/
