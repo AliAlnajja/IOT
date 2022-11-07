@@ -162,9 +162,9 @@ def main():
         dht.readDHT11()
         value = dht.temperature
         if value > 23 and not SENT: # If temp exceeds 24 degrees Celsius, send email
-            send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
+            Email.send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT = True
-        elif receive_email() and not NOT_REFUSED: # If email is received, with a response of yes, turn on fan
+        elif Email.receive_email() and not Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)
