@@ -1,7 +1,7 @@
 import random
 import time
 
-from paho.mqtt import client as mqtt_client #https://pypi.org/project/paho-mqtt/#installation
+from paho.mqtt import client as mqtt_client
 
 
 broker = "192.168.1.52"
@@ -11,7 +11,6 @@ topic = "IoTlab/termintensity"
 global client_id
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 
-global finalIntensity
 def subscribe():
     def on_message(client, userdata, msg):
         global lightIntensity
@@ -20,7 +19,7 @@ def subscribe():
             pass
         else:
             print(lightIntensity)
-            return lightIntensity
+#             return lightIntensity
 #         print("lightIntensity=", lightIntensity)
     client = mqtt_client.Client(client_id)
     client.on_message = on_message
@@ -30,6 +29,8 @@ def subscribe():
     client.publish(topic)
     time.sleep(4)
     client.loop_stop()
+    return lightIntensity
+
 def run():
     subscribe()
 

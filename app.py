@@ -10,8 +10,12 @@ from time import sleep # Import the sleep function from the time module
 
 import mqttsubscribe
 from mqttsubscribe import *
-intensity = run()
 
+global thisIntensity
+thisIntensity = type(mqttsubscribe.run()) #testing -- gives <class 'NoneType'> even though value is printed
+print(thisIntensity)
+
+# Global variables
 SENT = False
 FAN_ON = False
 
@@ -44,6 +48,28 @@ def main():
             html.H1("hi"),
             html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0),
         ], className= "light-bulb"),
+        
+        # Light Intensity slider
+        html.Div([
+            daq.Gauge(
+                id='light-gauge',
+                showCurrentValue=True,
+                units="Lumens",
+                label="Light Intensity",
+                value=thisIntensity,
+                max=100,
+                min=0,
+                className="light",
+            ),
+            # Interval to update gauges live
+            dcc.Interval(
+                    id='light-intervals',
+                    interval=10*1000, # in milliseconds
+                    n_intervals=0
+            ),
+        ]),
+            
+        
         
         # Gauges for Temperature and Humidity
         html.Div([
@@ -107,7 +133,7 @@ def main():
     </head>
     <body>
         <div class="header">
-            <h1>IOT DASHBOARD</h1>
+            <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
             <span>
                 <div class="left">
                     <label class="switch">
@@ -142,20 +168,42 @@ def main():
     '''
     
     ## CALLBACKS ##
-
-    # Callback for turnung the light on and off (Phase 1)
+    
+     # Callback for updating the light intensity
+    @app.callback(Output('light-gauge', 'value'),
+                Input('light-intervals', 'n_intervals'),
+    )
+    def updateLight(value):
+        global SENT
+        value = float(thisIntensity)
+        if value <= 400 and not SENT: 
+            send_email("Light update", "Light was turned on today")
+            SENT = True
+        elif receive_email(): 
+            displayLightClick(2)
+            sleep(5)
+            displayLightClick(1)
+        elif value < 400 and LIGHT_ON: 
+            SENT = False
+            displayLightClick(1)
+        return value
+            
+    # Callback for turning the light on and off
     @app.callback(Output('btn-nclicks-1', 'children'),
                 Input('btn-nclicks-1', 'n_clicks'),
     )
     def displayLightClick(clicks):
+        global LIGHT_ON
         if (clicks % 2 == 0):
             GPIO.output(LED, GPIO.HIGH)
+            LIGHT_ON = True
             sleep(1)
-            return html.Img(src=app.get_asset_url('light.png'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('light.jpg'), width=200, height=200),
         else:
             GPIO.output(LED, GPIO.LOW)
+            LIGHT_ON = False
             sleep(1)
-            return html.Img(src=app.get_asset_url('lightOff.png'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('lightoff.jpg'), width=200, height=200),
 
     # Callback for updating the temperature gauge
     @app.callback(Output('temp-gauge', 'value'),
@@ -166,9 +214,9 @@ def main():
         dht.readDHT11()
         value = dht.temperature
         if value > 23 and not SENT: # If temp exceeds 24 degrees Celsius, send email
-            Email.send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
+            send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT = True
-        elif Email.receive_email() and not Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
+        elif receive_email() and not NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)
@@ -212,7 +260,7 @@ def main():
     def update_output(value):
         return f'The selected color is {value}.'
     
-   
+    
     ## RUN SERVER ##
     if __name__ == '__main__':
         app.run_server(debug=True)
