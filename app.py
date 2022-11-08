@@ -11,7 +11,7 @@ import mqttsubscribe
 from mqttsubscribe import *
 
 global thisIntensity
-thisIntensity = type(mqttsubscribe.run()) #testing -- gives <class 'NoneType'> even though value is printed
+thisIntensity = type(mqttsubscribe.run()) #testing -- prints out intensity value for run() then gives <class 'NoneType'> even though value is printed
 print(thisIntensity)
 
 # Global variables
@@ -175,7 +175,7 @@ def main():
     def updateLight(value):
         global SENT
         value = float(thisIntensity)
-        if value <= 400 and not SENT:
+        if value <= 400 and not SENT: # ERROR HERE - shows on dash - inoperable NoneType with '<='
             Email.send_email("Light update", "Light was turned on today")
             SENT = True
         elif Email.receive_email():
