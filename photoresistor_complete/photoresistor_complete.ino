@@ -89,7 +89,7 @@ void loop() {
     float intensity = analogRead(A0);
     
     char intensityArr [8];
-    dtostrf(intensity,4,0,intensityArr);
+    dtostrf(intensity,4,2,intensityArr);
       
     client.publish("IoTlab/termintensity", intensityArr);
 
