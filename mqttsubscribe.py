@@ -6,16 +6,13 @@ from paho.mqtt import client as mqtt_client
 
 broker = "192.168.1.52"
 port = 1883
-global topic
 topic = "IoTlab/termintensity"
-global client_id
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 
 def subscribe():
     def on_message(client, userdata, msg):
-        global lightIntensity
         lightIntensity = msg.payload.decode()
-        if(lightIntensity == '' or lightIntensity == None):
+        if lightIntensity == '' or lightIntensity == None:
             pass
         else:
             print(lightIntensity)
@@ -29,8 +26,6 @@ def subscribe():
     client.publish(topic)
     time.sleep(4)
     client.loop_stop()
-    return lightIntensity
-
 def run():
     subscribe()
 
