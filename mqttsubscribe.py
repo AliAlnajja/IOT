@@ -1,55 +1,38 @@
 import random
+import time
 
-from paho.mqtt import client as mqtt_client
+from paho.mqtt import client as mqtt_client #https://pypi.org/project/paho-mqtt/#installation
 
 
-broker = '192.168.0.135'
+broker = "192.168.1.52"
 port = 1883
 global topic
 topic = "IoTlab/termintensity"
 global client_id
 client_id = f'python-mqtt-{random.randint(0, 100)}'
-# username = 'emqx'
-# password = 'public'
-
 
 global finalIntensity
-
-def connect_mqtt() -> mqtt_client:
-    def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print("Connected to MQTT Broker!")
-        else:
-            print("Failed to connect, return code %d\n", rc)
-
-    client = mqtt_client.Client(client_id)
- #   client.username_pw_set(username, password)
-    client.on_connect = on_connect
-    client.connect(broker, port)
-    return client
-
-
-
 def subscribe():
-    client = connect_mqtt()
     def on_message(client, userdata, msg):
-#         global lightIntensity
-        global lightIntensity 
-#         lightIntensity = msg.payload.decode()
-        lightIntensity = 4
-        print (lightIntensity)
-        return lightIntensity
-
-    client.subscribe(topic)
+        global lightIntensity
+        lightIntensity = msg.payload.decode()
+        if(lightIntensity == '' or lightIntensity == None):
+            pass
+        else:
+            print(lightIntensity)
+            return lightIntensity
+#         print("lightIntensity=", lightIntensity)
+    client = mqtt_client.Client(client_id)
     client.on_message = on_message
-
-
-def run():
-    client = connect_mqtt()
-    subscribe(client)
+    client.connect(broker, port)
     client.loop_start()
+    client.subscribe(topic)
+    client.publish(topic)
+    time.sleep(4)
+    client.loop_stop()
+def run():
+    subscribe()
 
-# finalIntensity = lightIntensity
 
 if __name__ == '__main__':
     run()

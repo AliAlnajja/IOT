@@ -8,6 +8,10 @@ import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import Freenove_DHT as DHT
 from time import sleep # Import the sleep function from the time module
 
+import mqttsubscribe
+from mqttsubscribe import *
+intensity = run()
+
 SENT = False
 FAN_ON = False
 
