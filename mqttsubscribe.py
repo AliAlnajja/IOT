@@ -13,6 +13,8 @@ def subscribe(): #whole method to subscribe to the server and return lightIntens
     def on_message(client, userdata, msg): 
         global lightIntensity # to be able to return at the end of subscribe()
         lightIntensity = msg.payload.decode() # setting value recieved from server to lightIntensity value
+        intIntensity = lightIntensity[:-3]
+        lightIntensity = intIntensity
         if lightIntensity == '' or lightIntensity == None: #discarding null values
             pass
         else:
