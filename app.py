@@ -10,9 +10,10 @@ from time import sleep # Import the sleep function from the time module
 import mqttsubscribe
 from mqttsubscribe import *
 
+from datetime import datetime
+
 global thisIntensity
-thisIntensity = type(mqttsubscribe.run()) #testing -- prints out intensity value for run() then gives <class 'NoneType'> even though value is printed
-print(thisIntensity)
+thisIntensity = int(mqttsubscribe.subscribe()) # during testing -- gives <class 'int'>
 
 # Global variables
 SENT = False
@@ -56,7 +57,7 @@ def main():
                 units="Lumens",
                 label="Light Intensity",
                 value=thisIntensity,
-                max=100,
+                max=1024,
                 min=0,
                 className="light",
             ),
@@ -174,15 +175,14 @@ def main():
     )
     def updateLight(value):
         global SENT
-        value = float(thisIntensity)
-        if value <= 400 and not SENT: # ERROR HERE - shows on dash - inoperable NoneType with '<='
-            Email.send_email("Light update", "Light was turned on today")
+        time = datetime.now()
+        value = thisIntensity
+        if value <= 400 and not SENT:
+            Email.send_email("Light update", "Light was turned on at " + str(time))
             SENT = True
         elif Email.receive_email():
             displayLightClick(2)
-            sleep(5)
-            displayLightClick(1)
-        elif value < 400 and LIGHT_ON: 
+        elif value > 400 and LIGHT_ON: 
             SENT = False
             displayLightClick(1)
         return value
@@ -197,12 +197,12 @@ def main():
             GPIO.output(LED, GPIO.HIGH)
             LIGHT_ON = True
             sleep(1)
-            return html.Img(src=app.get_asset_url('light.jpg'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('light.png'), width=200, height=200),
         else:
             GPIO.output(LED, GPIO.LOW)
             LIGHT_ON = False
             sleep(1)
-            return html.Img(src=app.get_asset_url('lightoff.jpg'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('lightOff.png'), width=200, height=200),
 
     # Callback for updating the temperature gauge
     @app.callback(Output('temp-gauge', 'value'),
