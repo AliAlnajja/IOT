@@ -28,9 +28,7 @@ def subscribe(): #whole method to subscribe to the server and return lightIntens
     time.sleep(4) # sleep so only one value is printed out
     client.loop_stop()
     return lightIntensity # to send to app.py
-def run():
-    subscribe()
 
 
 if __name__ == '__main__':
-    run()
+    subscribe()
