@@ -13,7 +13,7 @@ from mqttsubscribe import *
 from datetime import datetime
 
 global thisIntensity
-thisIntensity = int(mqttsubscribe.subscribe()) # during testing -- gives <class 'int'>
+# thisIntensity = int(mqttsubscribe.subscribe()) # during testing -- gives <class 'int'>
 
 # Global variables
 SENT = False
@@ -45,7 +45,6 @@ def main():
 
         # Light Button
         html.Div([
-            html.H1("hi"),
             html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0),
         ], className= "light-bulb"),
         
@@ -56,7 +55,8 @@ def main():
                 showCurrentValue=True,
                 units="Lumens",
                 label="Light Intensity",
-                value=thisIntensity,
+                # value=thisIntensity,
+                value=52,
                 max=1024,
                 min=0,
                 className="light",
@@ -99,26 +99,47 @@ def main():
                     interval=10*1000, # in milliseconds
                     n_intervals=0
             ),
+            html.Div([
+                html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
+                dcc.Interval(
+                    id='recieve-email_component',
+                    interval= 2 * 1000,  # in milliseconds
+                    n_intervals=0
+                ),  
         ]),
 
         # Fan Button
-        html.Div([
-            html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
-            dcc.Interval(
-                id='recieve-email_component',
-                interval= 2 * 1000,  # in milliseconds
-                n_intervals=0
-            ),
-            html.Div([
-            daq.ColorPicker(
-            id='my-color-picker-1',
-            label='Color Picker',
-            value=dict(hex='#119DFF'),
-            className="colors",
-            ),
-        html.Div(id='color-picker-output-1')
-        ], className="rgb"),
+        #     html.Div([
+        #     daq.ColorPicker(
+        #     id='my-color-picker-1',
+        #     label='Color Picker',
+        #     value=dict(hex='#119DFF'),
+        #     className="colors",
+        #     ),
+        # html.Div(id='color-picker-output-1')
+        # ], className="rgb"),
         ]),
+        html.Div([
+            html.Button('Red Button', id='Red', n_clicks = 0),
+        ], className = 'redButton'),  
+        html.Div([
+            html.Button('Green Button', id='Green', n_clicks = 0),
+        ], className = "greenButton"),
+        html.Div([
+            html.Button('Blue Button', id='Blue', n_clicks = 0),
+        ], className = "blueButton"),
+        html.Div([
+            html.Button('Yellow Button', id='Yellow', n_clicks = 0),
+        ], className = "yellowButton"),
+        html.Div([
+            html.Button('Magenta Button', id='Magenta', n_clicks = 0),
+        ], className = "magentaButton"),
+        html.Div([
+            html.Button('Cyan Button', id='Cyan', n_clicks = 0),
+        ], className = "cyanButton"),
+        html.Div([
+            html.Button('White Button', id='White', n_clicks = 0),
+        ], className = "whiteButton"),
     ])
     
     app.index_string = '''
@@ -135,12 +156,10 @@ def main():
         <div class="header">
             <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
             <span>
-                <div class="left">
                     <label class="switch">
                         <input type="checkbox">
                         <span class="slider round"></span>
                     </label>
-                </div>
             </span>
             
         </div>
@@ -169,6 +188,18 @@ def main():
     
     ## CALLBACKS ##
     
+    # Color Button Callbacks
+    
+
+    #TO BE DONE
+
+
+
+
+
+
+
+
      # Callback for updating the light intensity
     @app.callback(Output('light-gauge', 'value'),
                 Input('light-intervals', 'n_intervals'),
