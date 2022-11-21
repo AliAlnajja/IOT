@@ -28,7 +28,8 @@ div.header h1 {
 
 /* The switch - the box around the slider */
 .switch {
-  margin-top: 20px;
+  float: right;
+  /* margin-top: 20px; */
   position: relative;
   display: inline-block;
   width: 60px;
