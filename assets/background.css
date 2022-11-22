@@ -62,24 +62,28 @@ div.profile {
 
 div.light-bulb {
  border-left: 3px solid var(--border-color);
- border-bottom: 3px solid var(--border-color);
+ /* border-bottom: 3px solid var(--border-color); */
 }
 
 div.temperature {
-	/* border-left: 3px solid var(--border-color); */
+	border-right: 3px solid var(--border-color);
  border-bottom: 3px solid var(--border-color);
+	border-top: 3px solid var(--border-color);
 }
 
 div.humidity {
-	/* border-right: 3px solid var(--border-color); */
+	border-right: 3px solid var(--border-color);
  border-bottom: 3px solid var(--border-color);
+	border-top: 3px solid var(--border-color);
 }
 
-div.fan img {
+.fan {
 	border-bottom: 3px solid var(--border-color);
-	border-left: 3px solid var(--border-color);
-	border-right: 3px solid var(--border-color);
+	/* border-left: 3px solid var(--border-color); */
+	/* border-right: 3px solid var(--border-color); */
 }
+
+
 
 .profile h2 {
 	background-color: var(--profile-background);
