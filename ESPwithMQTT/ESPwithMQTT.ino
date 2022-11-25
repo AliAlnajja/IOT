@@ -87,7 +87,7 @@ void loop() {
 
   light_read();
   rfid_read();
-  delay(500);
+  delay(1500);
 }
 
 void light_read() {
@@ -97,7 +97,7 @@ void light_read() {
   dtostrf(intensity,4,2,intensityArr);
   Serial.println(intensity);
     
-  client.publish("IoTlab/lightIntensity", intensityArr);
+  client.publish("/IoTlab/lightIntensity", intensityArr);
 }
 
 void rfid_read() {
@@ -126,13 +126,13 @@ void rfid_read() {
 }
 
 void getHex(byte *buffer, byte bufferSize) {
+  String hexValue = "";
   for (byte i = 0; i < bufferSize; i++) {
-    String hexValue = buffer[i] < 0x10 ? " 0" : " ";
+    hexValue += buffer[i] < 0x10 ? " 0" : " ";
     hexValue += String(buffer[i], HEX);
-    char rfidVal [hexValue.length()];
-    hexValue.toCharArray(rfidVal, hexValue.length());
-    client.publish("IoTlab/rfidVals", rfidVal);
-    Serial.print(rfidVal);
   }
-  Serial.println();
+  char rfidVal [hexValue.length() + 1];
+  hexValue.toCharArray(rfidVal, hexValue.length() + 1);
+  Serial.println(rfidVal);
+  client.publish("/IoTlab/rfidVals", rfidVal);
 }
