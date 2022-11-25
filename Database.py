@@ -76,8 +76,8 @@ def parseUserData(userData):
 	print(userData["Profile_Image"])
 
 
-def uploadProfileImage(rfid_key):
-	storage.child(rfid_key).put("./userImages/" + rfid_key)
+def uploadProfileImage(rfid_key, fileExtension):
+	storage.child(rfid_key).put("./userImages/" + rfid_key + fileExtension)
 	updateUserInfo(rfid_key, "Profile_Image", rfid_key)
 	shutil.rmtree("./userImages")
 	os.mkdir("./userImages")
@@ -91,4 +91,3 @@ def downloadProfileImage(rfid_key):
 	else:
 		storage.child(rfid_key).download(rfid_key, "profile.png")
 	shutil.move("./profile.png", "./userImages/profile.png")
-

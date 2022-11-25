@@ -2,32 +2,29 @@
 from dash import Dash, html, Input, Output, dcc, ctx
 import dash_daq as daq
 import Email
+import Database
+import RGB
+import MQTT
 
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import Freenove_DHT as DHT
 from time import sleep # Import the sleep function from the time module
-
-import mqttsubscribe
-from mqttsubscribe import *
-
 from datetime import datetime
 
 global thisIntensity
-# thisIntensity = int(mqttsubscribe.subscribe()) # during testing -- gives <class 'int'>
 
 # Global variables
-SENT = False
+SENT_LIGHT = False
+SENT_EMAIL = False
 FAN_ON = False
 
 # Pi Phase 2 Setup
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
-LED=17 
 DHTPin=12
 enablePin = 13
 leftPin = 19
 rightPin = 26
-GPIO.setup(LED, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(enablePin, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(leftPin, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(rightPin, GPIO.OUT, initial=GPIO.HIGH)
@@ -64,12 +61,10 @@ def main():
             # Interval to update gauges live
             dcc.Interval(
                     id='light-intervals',
-                    interval=10*1000, # in milliseconds
+                    interval=3*1000, # in milliseconds
                     n_intervals=0
             ),
         ]),
-            
-        
         
         # Gauges for Temperature and Humidity
         html.Div([
@@ -108,16 +103,6 @@ def main():
                 ),  
         ]),
 
-        # Fan Button
-        #     html.Div([
-        #     daq.ColorPicker(
-        #     id='my-color-picker-1',
-        #     label='Color Picker',
-        #     value=dict(hex='#119DFF'),
-        #     className="colors",
-        #     ),
-        # html.Div(id='color-picker-output-1')
-        # ], className="rgb"),
         ]),
         html.Div([
             html.Button('Red Button', id='Red', n_clicks = 0),
@@ -188,33 +173,70 @@ def main():
     
     ## CALLBACKS ##
     
-    # Color Button Callbacks
+    @app.callback(Output('Red', 'children'),
+                Input('Red', 'n_clicks'),
+    )
+    def redLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.red()
+
+    @app.callback(Output('Blue', 'children'),
+                Input('Blue', 'n_clicks'),
+    )
+    def blueLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.blue()
     
+    @app.callback(Output('Green', 'children'),
+                Input('Green', 'n_clicks'),
+    )
+    def greenLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.green()
 
-    #TO BE DONE
+    @app.callback(Output('Yellow', 'children'),
+                Input('Yellow', 'n_clicks'),
+    )
+    def yellowLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.yellow()
 
+    @app.callback(Output('Magenta', 'children'),
+                Input('Magenta', 'n_clicks'),
+    )
+    def magentaLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.magenta()
 
+    @app.callback(Output('Cyan', 'children'),
+                Input('Cyan', 'n_clicks'),
+    )
+    def cyanLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.cyan()
 
-
-
-
-
+    @app.callback(Output('White', 'children'),
+                Input('White', 'n_clicks'),
+    )
+    def whiteLight(n_clicks):
+        if (LIGHT_ON):
+            RGB.white()
 
      # Callback for updating the light intensity
     @app.callback(Output('light-gauge', 'value'),
                 Input('light-intervals', 'n_intervals'),
     )
     def updateLight(value):
-        global SENT
+        global SENT_LIGHT
         time = datetime.now()
-        value = thisIntensity
-        if value <= 400 and not SENT:
+        value = MQTT.lightIntensity
+        if value <= 400 and not SENT_LIGHT:
             Email.send_email("Light update", "Light was turned on at " + str(time))
-            SENT = True
+            SENT_LIGHT = True
         elif Email.receive_email():
             displayLightClick(2)
         elif value > 400 and LIGHT_ON: 
-            SENT = False
+            SENT_LIGHT = False
             displayLightClick(1)
         return value
             
@@ -225,12 +247,12 @@ def main():
     def displayLightClick(clicks):
         global LIGHT_ON
         if (clicks % 2 == 0):
-            GPIO.output(LED, GPIO.HIGH)
+            RGB.white()
             LIGHT_ON = True
             sleep(1)
             return html.Img(src=app.get_asset_url('light.png'), width=200, height=200),
         else:
-            GPIO.output(LED, GPIO.LOW)
+            RGB.off()
             LIGHT_ON = False
             sleep(1)
             return html.Img(src=app.get_asset_url('lightOff.png'), width=200, height=200),
@@ -240,18 +262,18 @@ def main():
                 Input('temp-humidity-intervals', 'n_intervals'),
     )
     def updateTemp(value):
-        global SENT
+        global SENT_EMAIL
         dht.readDHT11()
         value = dht.temperature
-        if value > 23 and not SENT: # If temp exceeds 24 degrees Celsius, send email
+        if value > 23 and not SENT_EMAIL: # If temp exceeds 24 degrees Celsius, send email
             Email.send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
-            SENT = True
+            SENT_EMAIL = True
         elif Email.receive_email() and not Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)
         elif value < 22 and FAN_ON: # If temp is below 22 degrees Celsius, turn off fan
-            SENT = False
+            SENT_EMAIL = False
             displayMotorClick(1)
         return value
     
@@ -280,16 +302,6 @@ def main():
             FAN_ON = False
             sleep(1)
             return html.Img(src=app.get_asset_url('motor_off.jpg'), width=200, height=200),
-    
-    # RGB Color
-    @app.callback(
-        Output('color-picker-output-1', 'children'),
-        Input('my-color-picker-1', 'value')
-    )
-    # RGB Color
-    def update_output(value):
-        return f'The selected color is {value}.'
-    
     
     ## RUN SERVER ##
     if __name__ == '__main__':
