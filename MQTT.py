@@ -4,7 +4,7 @@ import time
 from paho.mqtt import client as mqtt_client
 
 
-broker = "192.168.2.141"
+broker = "10.0.0.193"
 port = 1883
 global topic
 topic = "/IoTlab/lightIntensity"

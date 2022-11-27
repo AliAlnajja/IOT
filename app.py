@@ -1,5 +1,8 @@
 # Imports
 from dash import Dash, html, Input, Output, dcc, ctx
+# pip3 install dash_bootstrap_components/dash_bootstrap_templates 
+import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import load_figure_template
 import dash_daq as daq
 import Email
 import Database
@@ -43,24 +46,16 @@ dht = DHT.DHT(DHTPin)
 dht.readDHT11()
 
 # Main method to facilitate code structuring
+dbc_css = ("https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.4/dbc.min.css")
 def main():
-    global username
-    global max_light
-    global max_temp
-    global max_humid
-    global profile_image_src
-    app = Dash(__name__)
+    app = Dash(external_stylesheets=[dbc.themes.MINTY, dbc_css])
+    load_figure_template("cyborg")
     app.layout = html.Div([
 
         ## HTML CONTAINERS ##
-
         # Light Button
         html.Div([
-            html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0),
-        ], className= "light-bulb"),
-        
-        # Light Intensity slider
-        html.Div([
+            html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0, className= "light-bulb"),
             daq.Gauge(
                 id='light-gauge',
                 showCurrentValue=True,
@@ -79,8 +74,7 @@ def main():
                     n_intervals=0
             ),
         ]),
-        
-        # Gauges for Temperature and Humidity
+
         html.Div([
             daq.Gauge(
                 id='temp-gauge',
@@ -101,48 +95,137 @@ def main():
                 max=100,
                 min=0,
                 className="humidity",
-            ),
+            ),  
+            html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
+                dcc.Interval(
+                    id='recieve-email_component',
+                    interval= 2 * 1000,  # in milliseconds
+                    n_intervals=0
+                ),
             # Interval to update gauges live
             dcc.Interval(
                     id='temp-humidity-intervals',
                     interval=10*1000, # in milliseconds
                     n_intervals=0
             ),
-            html.Div([
-                html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
-                dcc.Interval(
-                    id='recieve-email_component',
-                    interval= 2 * 1000,  # in milliseconds
-                    n_intervals=0
-                ),  
         ]),
-
+        
+        # Light Intensity slider
+        # html.Div([
+        #     daq.Gauge(
+        #         id='light-gauge',
+        #         showCurrentValue=True,
+        #         units="Lumens",
+        #         label="Light Intensity",
+        #         # value=thisIntensity,
+        #         value=52,
+        #         max=1024,
+        #         min=0,
+        #         className="light",
+        #     ),
+        #     # Interval to update gauges live
+        #     dcc.Interval(
+        #             id='light-intervals',
+        #             interval=3*1000, # in milliseconds
+        #             n_intervals=0
+        #     ),
+        # ]),
+        
+        # Gauges for Temperature and Humidity
+        # html.Div([
+        #     daq.Gauge(
+        #         id='temp-gauge',
+        #         showCurrentValue=True,
+        #         units="Degrees Celsius",
+        #         label="Temperature",
+        #         value=dht.temperature,
+        #         max=30,
+        #         min=0,
+        #         className="temperature",
+        #     ),
+        #     daq.Gauge(
+        #         id='humidity-gauge',
+        #         showCurrentValue=True,
+        #         units="Water Vapour/Units of Air",
+        #         label="Humidity",
+        #         value=dht.humidity,
+        #         max=100,
+        #         min=0,
+        #         className="humidity",
+        #     ),  
+        #     # Interval to update gauges live
+        #     dcc.Interval(
+        #             id='temp-humidity-intervals',
+        #             interval=10*1000, # in milliseconds
+        #             n_intervals=0
+        #     ),
+        #     html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
+        #         dcc.Interval(
+        #             id='recieve-email_component',
+        #             interval= 2 * 1000,  # in milliseconds
+        #             n_intervals=0
+        #         ),
+        # ]),
+        html.Div([
+            html.Button('Red Button', id='Red', n_clicks = 0, className = 'redButton'),  
+            html.Button('Green Button', id='Green', n_clicks = 0, className = "greenButton"),
+            html.Button('Blue Button', id='Blue', n_clicks = 0, className = "blueButton"),
+            html.Button('Yellow Button', id='Yellow', n_clicks = 0, className = "yellowButton"),
+            html.Button('Magenta Button', id='Magenta', n_clicks = 0, className = "magentaButton"),
+            html.Button('Cyan Button', id='Cyan', n_clicks = 0, className = "cyanButton"),
+            html.Button('White Button', id='White', n_clicks = 0, className = "whiteButton")
         ]),
-        html.Div([
-            html.Button('Red Button', id='Red', n_clicks = 0),
-        ], className = 'redButton'),  
-        html.Div([
-            html.Button('Green Button', id='Green', n_clicks = 0),
-        ], className = "greenButton"),
-        html.Div([
-            html.Button('Blue Button', id='Blue', n_clicks = 0),
-        ], className = "blueButton"),
-        html.Div([
-            html.Button('Yellow Button', id='Yellow', n_clicks = 0),
-        ], className = "yellowButton"),
-        html.Div([
-            html.Button('Magenta Button', id='Magenta', n_clicks = 0),
-        ], className = "magentaButton"),
-        html.Div([
-            html.Button('Cyan Button', id='Cyan', n_clicks = 0),
-        ], className = "cyanButton"),
-        html.Div([
-            html.Button('White Button', id='White', n_clicks = 0),
-        ], className = "whiteButton"),
     ])
-    app.index_string = formIndexString(username, max_temp, max_humid, max_light, profile_image_src)
-
-
+    global indexString
+    indexString = '''
+    <!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div class="header">
+            <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
+            <span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+            </span>
+            
+        </div>
+        <div class="profile">
+            <h2>USER PROFILE</h2>
+            <img src="''' + profile_image_src + '''" alt="Avatar">
+            <div class="info">
+            <p>Username</p>
+            </br>''' + str(username) + '''
+            </br>
+            <p>favorites</p>
+            </br>
+            <p>Temperature:</p>
+            </br> ''' + str(max_temp) + '''
+            </br>
+            <p>Humidity:</p>
+            </br> ''' + str(max_humid) + '''
+            </br>
+            <p>Light intensity:</p>
+            </br> ''' + str(max_light) + '''
+            </div>
+        </div> 
+        {%app_entry%}
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+    </body>
+</html>
+    '''
+    app.index_string = indexString
+    
     ## CALLBACKS ##
     
     @app.callback(Output('Red', 'children'),
@@ -206,6 +289,7 @@ def main():
         global max_temp
         global max_humid
         global profile_image_src
+        global indexString
 
         if (max_light != None):
             max_intensity = max_light
@@ -233,7 +317,7 @@ def main():
                 max_humid = userData["Humid_Threshold"]
                 max_light = userData["Light_Threshold"]
                 profile_image_src = "/userImages/profile.png"
-                app.index_string = formIndexString(username, max_temp, max_humid, max_light, profile_image_src)
+                app.index_string = indexString
                 Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
@@ -310,51 +394,4 @@ def main():
     if __name__ == '__main__':
         app.run_server(debug=True)
 
-def formIndexString(username, temp, humid, light, profileImageSource):
-    return '''
-    <!DOCTYPE html>
-<html>
-    <head>
-        {%metas%}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{%title%}</title>
-        {%favicon%}
-        {%css%}
-    </head>
-    <body>
-        <div class="header">
-            <h1>IOT DASHBOARD</h1>
-            <span>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-            </span>   
-        </div>
-        <div class="profile">
-            <h2>USER PROFILE</h2>
-            <img src="''' + profileImageSource + '''" alt="Avatar">
-            <div class="info">
-            <p>Username</p>
-            </br>''' + str(username) + '''
-            </br>
-            <p>favorites</p>
-            </br>
-            <p>Temperature:</p>
-            </br> ''' + str(temp) + '''
-            </br>
-            <p>Humidity:</p>
-            </br> ''' + str(humid) + '''
-            </br>
-            <p>Light intensity:</p>
-            </br> ''' + str(light) + '''
-            </div>
-        </div> 
-        {%app_entry%}
-            {%config%}
-            {%scripts%}
-            {%renderer%}
-    </body>
-</html>
-    '''
 main()

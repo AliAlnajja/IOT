@@ -7,10 +7,10 @@
 #define RST_PIN D0
 #define RESISTOR_PIN A0
 
-const char* ssid = "Wee Fee";
-const char* password = "Pr1cel3$$";
+const char* ssid = "FBI";
+const char* password = "Family@5145025680";
 
-const char* mqtt_server = "192.168.2.141";
+const char* mqtt_server = "10.0.0.193";
 
 WiFiClient vanieriot;
 PubSubClient client(vanieriot);

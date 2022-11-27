@@ -1,127 +1,95 @@
-/* SELECTING ALL THE APPRORIATE WIDGETS */
+/* The header section with the slider */
 
-.light-bulb {
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ /* overflow-y: hidden; */
+}
+
+
+div.header {
+ margin: 0;
+ height: 69px;
+ display: flex;
+}
+
+div.header h1 {
+/* margin-left: 200px; */
+ margin-top: 15px;
+ letter-spacing: 50px;
+ font-size: 40px;
+ text-align: right;
  display: inline-block;
-	background-color: black;
- float: right;
+ text-align: justify;
+ /* height: 1em; */
+ width: 100vw;
 }
 
-.light-bulb img {
-	position: relative;
-	display: inline-block;
-	width: 300px; 
- height: 303px;
-	object-fit: contain;
+/* The switch - the box around the slider */
+.switch {
+  margin-top: 20px;
+  position: relative;
+  width: 60px;
+  height: 34px;
+		float: right;
 }
 
-.temperature {
-	/* position: absolute; */
-	display: inline-block;
- background-color: black;
- float: left;
-	height: 353px;
- width: 526px;
-	margin: 0;
-	padding: 0;
+/* Hide default HTML checkbox */
+.switch input {
+ position: relative;
+  float: right;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.humidity {
-	float: left;
-	/* position: relative; */
-	display: inline-block;
- background-color: black;
- float: left;
-	height: 353px;
- width: 525px;
-	margin: 0;
-	padding: 0;
-	/* width: 100%; */
-} 
-
-.light {
-	background-color: black;
-	width: 1050px;
-	float: left;
+/* The slider */
+.slider {
+  position: absolute;
+  float: right;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 
-.fan {
-	margin: 0;
-	padding: 0;
+.slider:before {
+  float: right;
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 
-.fan img {
-	background-color: black;
-	padding: 0;
-	margin: 0;
-	display: inline;
-	/* position: relative;
-	display: inline-block; */
-	height: 348px;
-	width: 303px;
-	object-fit: cover;
-	float: left;
+input:checked + .slider {
+  background-color: #2196F3;
 }
 
-#Red, #Green, #Blue, #Yellow, #Magenta, #Cyan, #White {
-		display: block;
-		font-size: 20px;
-		/* vertical-align: middle; */
-		min-width: 150px;
-		height: 100px;
-		float: left;
-		background-color: white;
-  color: black;
-  border: 1px solid LightGray;
-  font-family: Times;
-  margin-left: 100px;
-		margin-bottom: 20px;
-  margin-right: 0px;
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
 }
 
-#Red {
-	background-color: red;
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
 }
 
-#Green {
-	background-color: green;
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
 }
 
-#Blue {
-	background-color: Blue;
+.slider.round:before {
+  border-radius: 50%;
 }
-
-#Yellow {
-	background-color: yellow;
-}
-
-#Magenta {
-	background-color: magenta;
-}
-
-#Cyan {
-	background-color: Cyan;
-}
-
-#White {
-	background-color: White;
-}
-
-
-/* #my-color-picker-1 {
-	float: right;
-}
-
-#color-picker-output-1 {
-	float: right;
-} */
-
-
-
-
-
-.coloredButtons:hover,
-.coloredButtons:focus {
-  background-color: #F082AC;
-}
-
-/* 1841 */

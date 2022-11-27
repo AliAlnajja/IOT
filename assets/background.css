@@ -1,15 +1,14 @@
 /* Dark Theme color */
 
-html body {
+body {
 	margin: 0px;
 	height: 100%;
 	width: 100%;
 }
 
-
 body {
 	--text-color: #222;
-	--bkg-color: #ffffff;
+	--bkg-color: LightGray;
 	--header-color: #fbd9b3;
 	--link-color: #0000dd;
 	--link-hover-color: #000000;
@@ -62,7 +61,7 @@ div.profile {
 
 div.light-bulb {
  border-left: 3px solid var(--border-color);
- /* border-bottom: 3px solid var(--border-color); */
+ border-bottom: 3px solid var(--border-color);
 }
 
 div.temperature {
@@ -81,9 +80,12 @@ div.humidity {
 	border-bottom: 3px solid var(--border-color);
 	/* border-left: 3px solid var(--border-color); */
 	/* border-right: 3px solid var(--border-color); */
+	border-top: 3px solid var(--border-color);
 }
 
-
+.light {
+	border-right: 3px solid var(--border-color);
+}
 
 .profile h2 {
 	background-color: var(--profile-background);
