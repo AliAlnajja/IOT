@@ -114,15 +114,10 @@ void rfid_read() {
     piccType != MFRC522::PICC_TYPE_MIFARE_4K) {
     return;
   }
-  if (rfid.uid.uidByte[0] != nuidPICC[0] ||
-    rfid.uid.uidByte[1] != nuidPICC[1] ||
-    rfid.uid.uidByte[2] != nuidPICC[2] ||
-    rfid.uid.uidByte[3] != nuidPICC[3] ) {
-    for (byte i = 0; i < 4; i++) {
-      nuidPICC[i] = rfid.uid.uidByte[i];
-    }
-    getHex(rfid.uid.uidByte, rfid.uid.size);
+  for (byte i = 0; i < 4; i++) {
+    nuidPICC[i] = rfid.uid.uidByte[i];
   }
+  getHex(rfid.uid.uidByte, rfid.uid.size);
 }
 
 void getHex(byte *buffer, byte bufferSize) {
