@@ -44,6 +44,11 @@ dht.readDHT11()
 
 # Main method to facilitate code structuring
 def main():
+    global username
+    global max_light
+    global max_temp
+    global max_humid
+    global profile_image_src
     app = Dash(__name__)
     app.layout = html.Div([
 
@@ -135,57 +140,9 @@ def main():
             html.Button('White Button', id='White', n_clicks = 0),
         ], className = "whiteButton"),
     ])
-    
-    global indexString
-    indexString = '''
-    <!DOCTYPE html>
-<html>
-    <head>
-        {%metas%}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{%title%}</title>
-        {%favicon%}
-        {%css%}
-    </head>
-    <body>
-        <div class="header">
-            <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
-            <span>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-            </span>
-            
-        </div>
-        <div class="profile">
-            <h2>USER PROFILE</h2>
-            <img src="''' + profile_image_src + '''" alt="Avatar">
-            <div class="info">
-            <p>Username</p>
-            </br>''' + str(username) + '''
-            </br>
-            <p>favorites</p>
-            </br>
-            <p>Temperature:</p>
-            </br> ''' + str(max_temp) + '''
-            </br>
-            <p>Humidity:</p>
-            </br> ''' + str(max_humid) + '''
-            </br>
-            <p>Light intensity:</p>
-            </br> ''' + str(max_light) + '''
-            </div>
-        </div> 
-        {%app_entry%}
-            {%config%}
-            {%scripts%}
-            {%renderer%}
-    </body>
-</html>
-    '''
-    app.index_string = indexString
-    
+    app.index_string = formIndexString(username, max_temp, max_humid, max_light, profile_image_src)
+
+
     ## CALLBACKS ##
     
     @app.callback(Output('Red', 'children'),
@@ -249,7 +206,6 @@ def main():
         global max_temp
         global max_humid
         global profile_image_src
-        global indexString
 
         if (max_light != None):
             max_intensity = max_light
@@ -277,7 +233,7 @@ def main():
                 max_humid = userData["Humid_Threshold"]
                 max_light = userData["Light_Threshold"]
                 profile_image_src = "/userImages/profile.png"
-                app.index_string = indexString
+                app.index_string = formIndexString(username, max_temp, max_humid, max_light, profile_image_src)
                 Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
@@ -354,4 +310,51 @@ def main():
     if __name__ == '__main__':
         app.run_server(debug=True)
 
+def formIndexString(username, temp, humid, light, profileImageSource):
+    return '''
+    <!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div class="header">
+            <h1>IOT DASHBOARD</h1>
+            <span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+            </span>   
+        </div>
+        <div class="profile">
+            <h2>USER PROFILE</h2>
+            <img src="''' + profileImageSource + '''" alt="Avatar">
+            <div class="info">
+            <p>Username</p>
+            </br>''' + str(username) + '''
+            </br>
+            <p>favorites</p>
+            </br>
+            <p>Temperature:</p>
+            </br> ''' + str(temp) + '''
+            </br>
+            <p>Humidity:</p>
+            </br> ''' + str(humid) + '''
+            </br>
+            <p>Light intensity:</p>
+            </br> ''' + str(light) + '''
+            </div>
+        </div> 
+        {%app_entry%}
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+    </body>
+</html>
+    '''
 main()
