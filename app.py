@@ -17,6 +17,15 @@ global thisIntensity
 SENT_LIGHT = False
 SENT_EMAIL = False
 FAN_ON = False
+CURRENT_USER = None
+
+# RFID generated values from database
+username = None
+max_temp = None
+max_humid = None
+max_light = None
+profile_image_src = "/assets/anonymousProfile.png"
+indexString = None
 
 # Pi Phase 2 Setup
 GPIO.setwarnings(False) # Ignore warning for now
@@ -127,7 +136,8 @@ def main():
         ], className = "whiteButton"),
     ])
     
-    app.index_string = '''
+    global indexString
+    indexString = '''
     <!DOCTYPE html>
 <html>
     <head>
@@ -150,17 +160,21 @@ def main():
         </div>
         <div class="profile">
             <h2>USER PROFILE</h2>
-            <img src="/assets/anonymousProfile.png" alt="Avatar">
+            <img src="''' + profile_image_src + '''" alt="Avatar">
             <div class="info">
             <p>Username</p>
+            </br>''' + str(username) + '''
             </br>
             <p>favorites</p>
             </br>
             <p>Temperature:</p>
+            </br> ''' + str(max_temp) + '''
             </br>
             <p>Humidity:</p>
+            </br> ''' + str(max_humid) + '''
             </br>
             <p>Light intensity:</p>
+            </br> ''' + str(max_light) + '''
             </div>
         </div> 
         {%app_entry%}
@@ -170,6 +184,7 @@ def main():
     </body>
 </html>
     '''
+    app.index_string = indexString
     
     ## CALLBACKS ##
     
@@ -228,16 +243,42 @@ def main():
     )
     def updateLight(value):
         global SENT_LIGHT
+        global CURRENT_USER
+        global username
+        global max_light
+        global max_temp
+        global max_humid
+        global profile_image_src
+        global indexString
+
+        if (max_light != None):
+            max_intensity = max_light
+        else:
+            max_intensity = 400
         time = datetime.now()
         value = MQTT.lightIntensity
-        if value <= 400 and not SENT_LIGHT:
+        if value <= max_intensity and not SENT_LIGHT:
             Email.send_email("Light update", "Light was turned on at " + str(time))
             SENT_LIGHT = True
-        elif Email.receive_email():
             displayLightClick(2)
-        elif value > 400 and LIGHT_ON: 
+        elif value > max_intensity and LIGHT_ON: 
             SENT_LIGHT = False
             displayLightClick(1)
+
+        print(str(CURRENT_USER))
+        if MQTT.rfidVal != None and MQTT.rfidVal != CURRENT_USER:
+            CURRENT_USER = MQTT.rfidVal
+            userData = Database.getUserInfo(CURRENT_USER)
+            Database.parseUserData(userData)
+            Database.downloadProfileImage(CURRENT_USER)
+            if userData != None:
+                username = userData["Name"]
+                max_temp = userData["Temp_Threshold"]
+                max_humid = userData["Humid_Threshold"]
+                max_light = userData["Light_Threshold"]
+                profile_image_src = "/userImages/profile.png"
+                app.index_string = indexString
+                Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
     # Callback for turning the light on and off
@@ -263,16 +304,22 @@ def main():
     )
     def updateTemp(value):
         global SENT_EMAIL
+        global max_temp
+
+        if (max_temp != None):
+            max_temp_threshold = max_temp
+        else:
+            max_temp_threshold = 24
         dht.readDHT11()
         value = dht.temperature
-        if value > 23 and not SENT_EMAIL: # If temp exceeds 24 degrees Celsius, send email
+        if value > max_temp_threshold and not SENT_EMAIL: # If temp exceeds 24 degrees Celsius, send email
             Email.send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT_EMAIL = True
         elif Email.receive_email() and not Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)
-        elif value < 22 and FAN_ON: # If temp is below 22 degrees Celsius, turn off fan
+        elif value < max_temp_threshold - 2 and FAN_ON: # If temp is below 22 degrees Celsius, turn off fan
             SENT_EMAIL = False
             displayMotorClick(1)
         return value

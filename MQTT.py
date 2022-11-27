@@ -13,7 +13,7 @@ global client_id
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 
 lightIntensity = 0
-rfidVal = ""
+rfidVal = None
 
 def subscribe():
     def on_message(client, userdata, msg):
