@@ -5,15 +5,15 @@ html {
 }
 
 
-.profile {
- background-color: black;
+/**.profile {
+ background-color: white;
  position: relative;
- /* display: inline-block; */
- /* margin-left: 20px; */
+ /* display: inline-block; *
+ /* margin-left: 20px; *
  float: left;
  width: 500px;
 
-}
+}*/
 
 /* Profile heading being selected AKA USER PROFILE */
 .profile h2 {

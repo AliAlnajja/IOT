@@ -21,38 +21,41 @@ html {
 	object-fit: contain;
 }
 
+/**
 .temperature {
 	position: relative;
 	display: inline-block;
- background-color: black;
- /* float: left; */
+ background-color: white;
+ /* float: left; 
 	height: 418.9px;
  width: 446px;
 	margin: 0;
 	padding: 0;
-}
+}*/
 
+/**
 .humidity {
-	/* float: left; */
+	/* float: left; 
 	position: relative;
 	display: inline-block;
- background-color: black;
- /* float: left; */
+ background-color: white;
+ /* float: left; 
 	height: 418.9px;
  width: 446px;
 	margin: 0;
 	padding: 0;
-	/* width: 100%; */
-} 
+	/* width: 100%; 
+}*/
 
+/**
 .light {
 	position: relative;
-	background-color: black;
+	background-color: white;
 	width: 892px;
 	height: 418.9px;
-	/* float: left; */
+	/* float: left; *
 	display: inline-block;
-}
+}*/
 
 .fan {
 	margin: 0;

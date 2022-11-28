@@ -7,23 +7,58 @@ body {
 }
 
 body {
-	--text-color: #222;
-	--bkg-color: LightGray;
-	--header-color: #fbd9b3;
+	--text-color: Black;
+	--bkg-color: Gray;
+	--header-color: #ea9dab;
 	--link-color: #0000dd;
 	--link-hover-color: #000000;
-	--border-color: black;
-	--profile-background: cyan;
+	--border-color: LightGray;
+	--profile-background: #8683ea;
+	--bg-color: white;
 }
 
 body.dark-theme {
 	--text-color: #eee;
 	--bkg-color:  #282a36;
-	--header-color: #ffb861;
+	--header-color: #CF6679;
 	--link-color: #40d0e0;
 	--link-hover-color: #ffffff;
-	--border-color: white;
-	--profile-background: black;
+	--border-color: DarkGray;
+	--profile-background: #3700B3;
+	--bg-color: black:
+}
+
+.temperature {
+	position: relative;
+	display: inline-block;
+	background: var(--bg-color);
+ /* float: left; */
+	height: 418.9px;
+ width: 446px;
+	margin: 0;
+	padding: 0;
+}
+
+.humidity {
+	/* float: left;*/
+	position: relative;
+	display: inline-block;
+ background-color: var(--bg-color);
+ /* float: left; */
+	height: 418.9px;
+ width: 446px;
+	margin: 0;
+	padding: 0;
+	/* width: 100%; */
+}
+
+.light {
+	position: relative;
+	background-color: var(--bg-color);
+	width: 892px;
+	height: 418.9px;
+	/* float: left; */
+	display: inline-block;
 }
 
 body {
@@ -57,6 +92,17 @@ a:hover {
 div.profile {
  border-right: 3px solid var(--border-color);
  border-bottom: 3px solid var(--border-color);
+ /**background-color: white;*/
+}
+
+.profile {
+ background-color: var(--bg-color);
+ position: relative;
+ /* display: inline-block; */
+ /* margin-left: 20px; */
+ float: left;
+ width: 500px;
+
 }
 
 div.light-bulb {
