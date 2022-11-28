@@ -4,6 +4,7 @@ from dash import Dash, html, Input, Output, dcc, ctx
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import dash_daq as daq
+from flask_caching import Cache #pip3 install flask-caching
 import Email
 import Database
 import RGB
@@ -49,6 +50,11 @@ dht.readDHT11()
 dbc_css = ("https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.4/dbc.min.css")
 def main():
     app = Dash(external_stylesheets=[dbc.themes.MINTY, dbc_css])
+    cache = Cache(app.server, config={
+        'CACHE_TYPE': 'simple'
+    })
+
+    cache.clear()
     load_figure_template("cyborg")
     app.layout = html.Div([
 
@@ -109,63 +115,6 @@ def main():
                     n_intervals=0
             ),
         ]),
-        
-        # Light Intensity slider
-        # html.Div([
-        #     daq.Gauge(
-        #         id='light-gauge',
-        #         showCurrentValue=True,
-        #         units="Lumens",
-        #         label="Light Intensity",
-        #         # value=thisIntensity,
-        #         value=52,
-        #         max=1024,
-        #         min=0,
-        #         className="light",
-        #     ),
-        #     # Interval to update gauges live
-        #     dcc.Interval(
-        #             id='light-intervals',
-        #             interval=3*1000, # in milliseconds
-        #             n_intervals=0
-        #     ),
-        # ]),
-        
-        # Gauges for Temperature and Humidity
-        # html.Div([
-        #     daq.Gauge(
-        #         id='temp-gauge',
-        #         showCurrentValue=True,
-        #         units="Degrees Celsius",
-        #         label="Temperature",
-        #         value=dht.temperature,
-        #         max=30,
-        #         min=0,
-        #         className="temperature",
-        #     ),
-        #     daq.Gauge(
-        #         id='humidity-gauge',
-        #         showCurrentValue=True,
-        #         units="Water Vapour/Units of Air",
-        #         label="Humidity",
-        #         value=dht.humidity,
-        #         max=100,
-        #         min=0,
-        #         className="humidity",
-        #     ),  
-        #     # Interval to update gauges live
-        #     dcc.Interval(
-        #             id='temp-humidity-intervals',
-        #             interval=10*1000, # in milliseconds
-        #             n_intervals=0
-        #     ),
-        #     html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
-        #         dcc.Interval(
-        #             id='recieve-email_component',
-        #             interval= 2 * 1000,  # in milliseconds
-        #             n_intervals=0
-        #         ),
-        # ]),
         html.Div([
             html.Button('Red Button', id='Red', n_clicks = 0, className = 'redButton'),  
             html.Button('Green Button', id='Green', n_clicks = 0, className = "greenButton"),
@@ -176,55 +125,7 @@ def main():
             html.Button('White Button', id='White', n_clicks = 0, className = "whiteButton")
         ]),
     ])
-    global indexString
-    indexString = '''
-    <!DOCTYPE html>
-<html>
-    <head>
-        {%metas%}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{%title%}</title>
-        {%favicon%}
-        {%css%}
-    </head>
-    <body>
-        <div class="header">
-            <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
-            <span>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-            </span>
-            
-        </div>
-        <div class="profile">
-            <h2>USER PROFILE</h2>
-            <img src="''' + profile_image_src + '''" alt="Avatar">
-            <div class="info">
-            <p>Username</p>
-            </br>''' + str(username) + '''
-            </br>
-            <p>favorites</p>
-            </br>
-            <p>Temperature:</p>
-            </br> ''' + str(max_temp) + '''
-            </br>
-            <p>Humidity:</p>
-            </br> ''' + str(max_humid) + '''
-            </br>
-            <p>Light intensity:</p>
-            </br> ''' + str(max_light) + '''
-            </div>
-        </div> 
-        {%app_entry%}
-            {%config%}
-            {%scripts%}
-            {%renderer%}
-    </body>
-</html>
-    '''
-    app.index_string = indexString
+    setattr(dcc._dash._get_app.APP,"index_string", formIndexString(username, max_temp, max_humid, max_light, profile_image_src))
     
     ## CALLBACKS ##
     
@@ -305,19 +206,18 @@ def main():
             SENT_LIGHT = False
             displayLightClick(1)
 
-        print(str(CURRENT_USER))
         if MQTT.rfidVal != None and MQTT.rfidVal != CURRENT_USER:
             CURRENT_USER = MQTT.rfidVal
             userData = Database.getUserInfo(CURRENT_USER)
-            Database.parseUserData(userData)
             Database.downloadProfileImage(CURRENT_USER)
             if userData != None:
                 username = userData["Name"]
                 max_temp = userData["Temp_Threshold"]
                 max_humid = userData["Humid_Threshold"]
                 max_light = userData["Light_Threshold"]
-                profile_image_src = "/userImages/profile.png"
-                app.index_string = indexString
+                profile_image_src = "/assets/userImages/profile.png?" + str(time.time())
+                cache.clear()
+                setattr(dcc._dash._get_app.APP,"index_string", formIndexString(username, max_temp, max_humid, max_light, profile_image_src))
                 Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
@@ -393,5 +293,56 @@ def main():
     ## RUN SERVER ##
     if __name__ == '__main__':
         app.run_server(debug=True)
+
+def formIndexString(username, temp, humid, light, profileImageSource):
+    return '''
+    <!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div class="header">
+            <h1>IOT DASHBOARD<IoTlab/termintensity/h1>
+            <span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+            </span>
+            
+        </div>
+        <div class="profile">
+            <h2>USER PROFILE</h2>
+            <img src="''' + profileImageSource + '''" alt="Avatar" style="width:200px;height:200px;"/>
+            <div class="info">
+            <p>Username</p>
+            <p>''' + str(username) + '''</p>
+            </br></br>
+            <h3>Favorites</h3>
+            </br>
+            <p>Temperature:</p>
+            <p>''' + str(temp) + '''</p>
+            </br>
+            <p>Humidity:</p>
+            <p>''' + str(humid) + '''</p>
+            </br>
+            <p>Light intensity:</p>
+            <p>''' + str(light) + '''</p>
+            </br>
+            </div>
+        </div> 
+        {%app_entry%}
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+    </body>
+</html>
+    '''
+    
 
 main()
