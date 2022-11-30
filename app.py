@@ -15,8 +15,6 @@ import Freenove_DHT as DHT
 from time import sleep # Import the sleep function from the time module
 from datetime import datetime
 
-global thisIntensity
-
 # Global variables
 SENT_LIGHT = False
 SENT_EMAIL = False
@@ -67,7 +65,6 @@ def main():
                 showCurrentValue=True,
                 units="Lumens",
                 label="Light Intensity",
-                # value=thisIntensity,
                 value=52,
                 max=1024,
                 min=0,

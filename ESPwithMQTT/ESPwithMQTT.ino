@@ -10,7 +10,7 @@
 const char* ssid = "FBI";
 const char* password = "Family@5145025680";
 
-const char* mqtt_server = "10.0.0.193";
+const char* mqtt_server = "10.0.0.94";
 
 WiFiClient vanieriot;
 PubSubClient client(vanieriot);

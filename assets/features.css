@@ -9,7 +9,7 @@ html {
  /* display: inline-block; */
 	background-color: white;
  float: right;
-	width: 449px; 
+	width: 724px; 
  height: 418.9px;
 }
 
@@ -60,8 +60,8 @@ html {
 .fan {
 	margin: 0;
 	padding: 0;
-	width: 449px; 
- height: 418.9px;
+	width: 724px; 
+ 	height: 32.5rem;
 	/* display: inline-block; */
 	/* float: right; */
 	position: absolute;
@@ -91,9 +91,9 @@ html {
   color: black;
   border: 1px solid LightGray;
   font-family: Times;
-  margin-left: 40px;
+  margin-left: 45px;
 		margin-bottom: 20px;
-  margin-right: 70px;
+  margin-right: 100px;
 		/* position: absolute; */
 }
 
@@ -143,3 +143,11 @@ html {
 }
 
 /* 1841 */
+
+/* .cRfgdB svg {
+	margin-top: 80px;
+} */
+
+.eYbLCt {
+	margin-top: 100px
+}
