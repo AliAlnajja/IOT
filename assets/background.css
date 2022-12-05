@@ -67,12 +67,12 @@ body.dark-theme {
 }
 
 .light-bulb  img {
-	background-color: var(--bkg-color);
+	background-color: var(--bg-color);
 	/* background-blend-mode: multiply; */
 }
 
 .light-bulb {
-	background-color: var(--bkg-color);
+	background-color: var(--bg-color);
 	/* background-blend-mode: multiply; */
 }
 
@@ -151,6 +151,11 @@ div.humidity {
 	/* border-left: 3px solid var(--border-color); */
 	/* border-right: 3px solid var(--border-color); */
 	border-top: 3px solid var(--border-color);
+	background-color: var(--bg-color);
+}
+
+.fan img {
+	background-color: var(--bg-color);
 }
 
 .light {

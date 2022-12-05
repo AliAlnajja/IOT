@@ -78,6 +78,10 @@ def main():
             ),
         ]),
 
+        html.Div ([
+            html.A(html.Button(""), href="/"),
+        ])
+
         html.Div([
             daq.Gauge(
                 id='temp-gauge',
@@ -99,10 +103,10 @@ def main():
                 min=0,
                 className="humidity",
             ),  
-            html.Button(html.Img(src = app.get_asset_url('motor_off.jpg')), id='btn-nclicks-2', n_clicks=1, className= "fan"),
+            html.Button(html.Img(src = app.get_asset_url('motor_off.`png`')), id='btn-nclicks-2', n_clicks=1, className= "fan"),
                 dcc.Interval(
                     id='recieve-email_component',
-                    interval= 2 * 1000,  # in milliseconds
+                    interval= 2 * 1000,  # in milliseconds``
                     n_intervals=0
                 ),
             # Interval to update gauges live
@@ -213,8 +217,9 @@ def main():
                 max_humid = userData["Humid_Threshold"]
                 max_light = userData["Light_Threshold"]
                 profile_image_src = "/assets/userImages/profile.png?" + str(time.time())
-                cache.clear()
                 setattr(dcc._dash._get_app.APP,"index_string", formIndexString(username, max_temp, max_humid, max_light, profile_image_src))
+                sleep(2)
+                cache.clear()
                 Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
@@ -280,17 +285,17 @@ def main():
             GPIO.output(enablePin, GPIO.LOW)
             FAN_ON = False
             sleep(1)
-            return html.Img(src=app.get_asset_url('motor_off.jpg'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('motor_off.png'), width=200, height=200),
         else:
             GPIO.output(enablePin, GPIO.HIGH)
             GPIO.output(rightPin, GPIO.HIGH)
             FAN_ON = True
             sleep(1)
-            return html.Img(src=app.get_asset_url('motor_on.jpg'), width=200, height=200),
+            return html.Img(src=app.get_asset_url('motor_on.png'), width=200, height=200),
     
     ## RUN SERVER ##
     if __name__ == '__main__':
-        app.run_server(debug=True)
+        app.run_server(debug=True, port=8060)
 
 def formIndexString(username, temp, humid, light, profileImageSource):
     return '''
