@@ -7,10 +7,10 @@
 #define RST_PIN D0
 #define RESISTOR_PIN A0
 
-const char* ssid = "TP-Link_2AD8";
-const char* password = "14730078";
+const char* ssid = "Tony's Pixel5";
+const char* password = "Ondabus1010";
 
-const char* mqtt_server = "192.168.0.187";
+const char* mqtt_server = "192.168.238.186";
 
 WiFiClient vanieriot;
 PubSubClient client(vanieriot);
