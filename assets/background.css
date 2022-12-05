@@ -66,6 +66,25 @@ body.dark-theme {
 	display: inline-block;
 }
 
+.light-bulb  img {
+	background-color: var(--bkg-color);
+	/* background-blend-mode: multiply; */
+}
+
+.light-bulb {
+	background-color: var(--bkg-color);
+	/* background-blend-mode: multiply; */
+}
+
+/* .fan {
+	background-color: var(--bg-color);
+}
+
+.fan img {
+	background-color: var(--bg-color);
+} */
+
+
 body {
 	background: var(--bkg-color);
 }

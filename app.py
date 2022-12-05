@@ -38,7 +38,7 @@ leftPin = 19
 rightPin = 26
 GPIO.setup(enablePin, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(leftPin, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(rightPin, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(rightPin, GPIO.OUT, initial=GPIO.LOW)
 dht = DHT.DHT(DHTPin)    
 
 # initial read of DHT data
@@ -59,7 +59,7 @@ def main():
         ## HTML CONTAINERS ##
         # Light Button
         html.Div([
-            html.Button(html.Img(src = app.get_asset_url('light.png')), id='btn-nclicks-1', n_clicks=0, className= "light-bulb"),
+            html.Button(html.Img(src = app.get_asset_url('lightOff.png')), id='btn-nclicks-1', n_clicks=1, className= "light-bulb"),
             daq.Gauge(
                 id='light-gauge',
                 showCurrentValue=True,
@@ -99,7 +99,7 @@ def main():
                 min=0,
                 className="humidity",
             ),  
-            html.Button(id='btn-nclicks-2', n_clicks=0, className= "fan"),
+            html.Button(html.Img(src = app.get_asset_url('motor_off.jpg')), id='btn-nclicks-2', n_clicks=1, className= "fan"),
                 dcc.Interval(
                     id='recieve-email_component',
                     interval= 2 * 1000,  # in milliseconds
@@ -276,16 +276,17 @@ def main():
     )
     def displayMotorClick(clicks):
         global FAN_ON
-        if (clicks % 2 == 0):
-            GPIO.output(enablePin, GPIO.HIGH)
-            FAN_ON = True
-            sleep(1)
-            return html.Img(src=app.get_asset_url('motor_on.jpg'), width=200, height=200),
-        else:
+        if (clicks % 2 != 0):
             GPIO.output(enablePin, GPIO.LOW)
             FAN_ON = False
             sleep(1)
             return html.Img(src=app.get_asset_url('motor_off.jpg'), width=200, height=200),
+        else:
+            GPIO.output(enablePin, GPIO.HIGH)
+            GPIO.output(rightPin, GPIO.HIGH)
+            FAN_ON = True
+            sleep(1)
+            return html.Img(src=app.get_asset_url('motor_on.jpg'), width=200, height=200),
     
     ## RUN SERVER ##
     if __name__ == '__main__':

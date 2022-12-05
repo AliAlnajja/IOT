@@ -10,7 +10,7 @@
 const char* ssid = "TP-Link_2AD8";
 const char* password = "14730078";
 
-const char* mqtt_server = "192.168.0.187";
+const char* mqtt_server = "192.168.0.189";
 
 WiFiClient vanieriot;
 PubSubClient client(vanieriot);
