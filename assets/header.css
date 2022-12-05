@@ -4,29 +4,45 @@
  margin: 0;
  padding: 0;
  box-sizing: border-box;
- /* overflow-y: hidden; */
 }
 
-.refresh {
-  display: inline-block;
-  /* float: right; */
+
+div.refresh {
+  position: relative;
+  padding : 0px;
+  margin-top: 14px;
+  margin-right: 10px;
+  float: right;
+  border: none;
+}
+
+.refreshBtn {
+  border: none;
+  background-color: transparent;
+}
+
+.refreshImg {
+  width: 30px;
+  height: 30px;
+  margin: 0px;
+  padding: 0px;
+  border: none;
+  float: right;
 }
 
 div.header {
  margin: 0;
- height: 69px;
+ height: 100px;
  display: flex;
 }
 
 div.header h1 {
-/* margin-left: 200px; */
  margin-top: 15px;
  letter-spacing: 50px;
  font-size: 40px;
  text-align: right;
  display: inline-block;
  text-align: justify;
- /* height: 1em; */
  width: 100vw;
 }
 

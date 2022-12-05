@@ -78,9 +78,9 @@ def main():
             ),
         ]),
 
-        html.Div ([
-            html.A(html.Button(""), href="/"),
-        ])
+        # html.Div ([
+        #     html.A(html.Button(html.Img(src = app.get_asset_url("refresh.png"), width=10, height=10), className= "refresh"), href="/"),
+        # ]),
 
         html.Div([
             daq.Gauge(
@@ -295,7 +295,7 @@ def main():
     
     ## RUN SERVER ##
     if __name__ == '__main__':
-        app.run_server(debug=True, port=8060)
+        app.run_server(debug=True)
 
 def formIndexString(username, temp, humid, light, profileImageSource):
     return '''
@@ -317,8 +317,11 @@ def formIndexString(username, temp, humid, light, profileImageSource):
                         <span class="slider round"></span>
                     </label>
             </span>
-            
+        <div class= "refresh">
+            <button class="refreshBtn" onClick="window.location.reload();"><img src="assets/refresh.png" class="refreshImg"/></button>
         </div>
+        </div>
+
         <div class="profile">
             <h2>USER PROFILE</h2>
             <img src="''' + profileImageSource + '''" alt="Avatar" style="width:200px;height:200px;"/>

@@ -6,8 +6,6 @@ html {
 }
 
 .light-bulb {
- /* display: inline-block; */
-	/* background-color: white; */
  float: right;
 	width: 724px; 
  height: 418.9px;
@@ -21,68 +19,27 @@ html {
 	object-fit: contain;
 }
 
-/**
-.temperature {
-	position: relative;
-	display: inline-block;
- background-color: white;
- /* float: left; 
-	height: 418.9px;
- width: 446px;
-	margin: 0;
-	padding: 0;
-}*/
-
-/**
-.humidity {
-	/* float: left; 
-	position: relative;
-	display: inline-block;
- background-color: white;
- /* float: left; 
-	height: 418.9px;
- width: 446px;
-	margin: 0;
-	padding: 0;
-	/* width: 100%; 
-}*/
-
-/**
-.light {
-	position: relative;
-	background-color: white;
-	width: 892px;
-	height: 418.9px;
-	/* float: left; *
-	display: inline-block;
-}*/
-
 .fan {
 	margin: 0;
 	padding: 0;
 	width: 724px; 
  	height: 32.5rem;
-	/* display: inline-block; */
-	/* float: right; */
 	position: absolute;
 }
 
 .fan img {
 	padding: 0;
 	margin: 0;
-	/* display: inline-block; */
 	position: relative;
 	width: 720px; 
- height: 32rem;
+ 	height: 32rem;
 	object-fit: fill;
-	/* float: right; */
 	display: inline-block;
 }
 
 #Red, #Green, #Blue, #Yellow, #Magenta, #Cyan, #White {
 		display: block;
 		font-size: 20px;
-		/* vertical-align: middle; */
 		min-width: 150px;
 		height: 100px;
 		float: right;
@@ -93,7 +50,6 @@ html {
   margin-left: 45px;
 		margin-bottom: 20px;
   margin-right: 100px;
-		/* position: absolute; */
 }
 
 #Red {
@@ -124,28 +80,10 @@ html {
 	background-color: White;
 }
 
-/* #my-color-picker-1 {
-	float: right;
-}
-
-#color-picker-output-1 {
-	float: right;
-} */
-
-
-
-
-
 .coloredButtons:hover,
 .coloredButtons:focus {
   background-color: #F082AC;
 }
-
-/* 1841 */
-
-/* .cRfgdB svg {
-	margin-top: 80px;
-} */
 
 .eYbLCt {
 	margin-top: 100px
