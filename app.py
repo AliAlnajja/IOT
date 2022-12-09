@@ -33,12 +33,12 @@ indexString = None
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 DHTPin=12
-enablePin = 13
+enablePin = 26
 leftPin = 19
-rightPin = 26
-GPIO.setup(enablePin, GPIO.OUT, initial=GPIO.LOW)
+rightPin = 13
+GPIO.setup(enablePin, GPIO.OUT, initial=GPIO.HIGH)
 GPIO.setup(leftPin, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(rightPin, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(rightPin, GPIO.OUT, initial=GPIO.HIGH)
 dht = DHT.DHT(DHTPin)    
 
 # initial read of DHT data
@@ -185,6 +185,8 @@ def main():
     )
     def updateLight(value):
         global SENT_LIGHT
+        global SENT_EMAIL
+        global FAN_ON
         global CURRENT_USER
         global username
         global max_light
@@ -220,6 +222,10 @@ def main():
                 setattr(dcc._dash._get_app.APP,"index_string", formIndexString(username, max_temp, max_humid, max_light, profile_image_src))
                 sleep(2)
                 cache.clear()
+                SENT_LIGHT = False
+                SENT_EMAIL = False
+                FAN_ON = False
+                Email.NOT_REFUSED = True
                 Email.send_email("New User Connection", "User " + str(username) + " has connected to the system at " + str(time))
         return value
             
@@ -254,10 +260,11 @@ def main():
             max_temp_threshold = 24
         dht.readDHT11()
         value = dht.temperature
+        print(value)
         if value > max_temp_threshold and not SENT_EMAIL: # If temp exceeds 24 degrees Celsius, send email
             Email.send_email("Temperature is High", "Would You like to turn on the fan?\nPlease reply with \'Yes\' or \'No\'.")
             SENT_EMAIL = True
-        elif Email.receive_email() and not Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
+        elif Email.receive_email() and Email.NOT_REFUSED: # If email is received, with a response of yes, turn on fan
             displayMotorClick(2)
             sleep(5)
             displayMotorClick(1)

@@ -1,0 +1,32 @@
+Here is what you'll need to do to run the application
+
+1. Wire up the sensors/actuators
+2. Change the wifi SSID and password in the ESPwithMQTT ino file
+3. Change the ip address in the same file to the ip address of the RPI
+4. Change the ip address in the MQTT.py file to the ip of the RPI
+5. Upload the ESPwithMQTT ino file to the ESP8266
+6. Install Python 3.10 or newer
+7. Install these libraries:
+    - easyimap -> # pip3 install easyimap
+    - smtplib -> # pip3 install smtplib
+    - imaplib -> # pip3 install imaplib
+    - pyrebase4 -> # pip3 install Pyrebase4
+    - dash plotly (dash) -> # https://peppe8o.com/dash-plotly-and-raspberry-pi-publish-your-python-script-on-web-pages/
+    - dash_bootstrap_components -> # pip3 install dash_bootstrap_components 
+    - dash_bootstrap_templates -> # pip3 install dash_bootstrap_templates
+    - flask_caching -> # pip3 install flask-caching
+    - paho.mqtt -> # pip3 install paho.mqtt
+8. Add users to the database with the following command at the end of Database.py 
+    - createUser(rfid_key, name, max_temp, max_humid, max_light) # rfid key should be the hex serial number of the tag (i.e. 43:fa:92:11)
+9. To add a profile image:
+    - create a directory in 'assets' called 'userImages'
+    - put an image in the folder (ideally a png)
+    - rename the image to the serial number of the RFID tag (i.e. 43:fa:92:11)
+    - run uploadProfileImage(rfid_key, fileExtension) in Database.py, inputting the rfid_key, and the file extension of the image
+10. Make sure no commands are left at the end of Database.py
+11. Open inspect element of browser, in the network tab, tick the box for 'disable caching' *OPTIONAL*
+12. Install mosquitto mqtt server
+13. Open an instance of the terminal, run mosquitto
+14. Open the folder containing the project in the terminal
+15. run 'python3 app.py'
+
